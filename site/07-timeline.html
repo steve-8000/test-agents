@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 새김 스토리</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  /* 페이지 전용 스타일 (값은 전부 var() 토큰 참조) */
+
+  /* 하루 = 스토리 카드 1개 (바깥 카드) */
+  .story {
+    margin: var(--sp-3) var(--sp-4);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .story.muted { opacity: 0.82; }
+
+  .story-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3);
+    padding: var(--sp-4) var(--sp-4) var(--sp-2);
+  }
+  .story-date { font: var(--text-title); color: var(--fg); }
+  .story-dow { color: var(--fg-muted); font-weight: 500; }
+  .story-head .icon-btn { flex: none; }
+
+  /* 자동 조립 캡션 (결정론적, LLM 없음) */
+  .story-auto {
+    display: flex; align-items: center; gap: var(--sp-1);
+    padding: 0 var(--sp-4) var(--sp-2);
+    font: var(--text-xs); letter-spacing: 0; text-transform: none;
+    color: var(--fg-muted);
+  }
+  .story-auto .ph { color: var(--accent); font-size: 14px; }
+
+  /* 요약 칩 줄 (날씨 + 완료/루틴/사진 롤업) */
+  .story-summary {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2);
+    padding: 0 var(--sp-4) var(--sp-3);
+  }
+
+  /* 카드 안 모먼트: .timeline/.tl-* 재사용하되 카드 중첩 방지(플랫) */
+  .story .timeline { padding: var(--sp-1) var(--sp-4) var(--sp-2); }
+  .story .tl-card {
+    background: transparent; border: none; box-shadow: none; padding: 0;
+  }
+  .story .tl-head {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2);
+  }
+  .story .tl-title { font: var(--text-body); font-weight: 600; color: var(--fg); }
+  .story .tl-badges { display: flex; align-items: center; gap: var(--sp-2); flex: none; }
+  .moment-check { color: var(--success); font-size: 16px; flex: none; }
+  .tl-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 1px; word-break: keep-all; }
+
+  .tl-thumb {
+    margin-top: var(--sp-3);
+    width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+    border-radius: var(--radius-input);
+    display: block;
+  }
+  .tl-thumb.sm { aspect-ratio: 3 / 1; }
+  [data-theme="dark"] .tl-thumb { filter: brightness(0.85) contrast(1.05); }
+
+  .tl-quote {
+    margin-top: var(--sp-2);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--border-strong);
+    font: var(--text-sm); color: var(--fg-muted); word-break: keep-all;
+  }
+
+  /* 내가 얹은 한 줄 (선택적) */
+  .day-line {
+    margin: 0 var(--sp-4) var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--accent-soft);
+    border-radius: var(--radius-input);
+  }
+  .day-line .lbl {
+    display: flex; align-items: center; gap: var(--sp-1);
+    font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase;
+    color: var(--accent);
+  }
+  .day-line p { font: var(--text-body); color: var(--fg); margin-top: var(--sp-1); word-break: keep-all; }
+
+  /* 한 줄 남기기 진입점 */
+  .day-line-entry {
+    display: flex; align-items: center; gap: var(--sp-2);
+    margin: 0 var(--sp-4) var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-pill);
+    color: var(--fg-muted); font: var(--text-sm);
+    cursor: pointer; background: transparent; width: calc(100% - 2 * var(--sp-4));
+  }
+  .day-line-entry .ph { color: var(--accent); font-size: 18px; }
+
+  /* 공유 힌트 (스텝 3) */
+  .share-hint {
+    display: flex; align-items: center; gap: var(--sp-2);
+    margin: 0 var(--sp-4) var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--accent-soft);
+    border-radius: var(--radius-input);
+    font: var(--text-sm); color: var(--accent); word-break: keep-all;
+  }
+  .share-hint .ph { flex: none; }
+
+  /* 오늘 카드 공유 버튼 강조 (스텝 3) */
+  #shareBtn { transition: background 0.25s ease, color 0.25s ease; }
+  body[data-step="3"] #shareBtn { background: var(--accent); color: var(--accent-fg); }
+  body[data-step="3"] #todayStory { border-color: var(--accent); box-shadow: var(--shadow-md); }
+  #todayStory { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">07 · 새김 스토리</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+
+<main class="shell-main">
+  <div class="stage">
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+
+          <div class="navbar">
+            <a href="02-home-week.html" class="icon-btn" style="text-decoration:none;" aria-label="뒤로"><i class="ph ph-arrow-left"></i></a>
+            <div>
+              <div class="title">새김</div>
+              <div class="sub">하루가 기록이 됩니다</div>
+            </div>
+          </div>
+
+          <!-- 오늘: 자동 조립된 하루 스토리 카드 -->
+          <article class="story" id="todayStory">
+            <div class="story-head">
+              <div>
+                <div class="story-date">7월 16일 <span class="story-dow">목요일</span></div>
+              </div>
+              <button class="icon-btn" id="shareBtn" aria-label="하루 카드 공유"><i class="ph ph-share-network"></i></button>
+            </div>
+
+            <div class="story-auto">
+              <i class="ph ph-stack"></i> 완료·사진·날씨로 자동 조립됨
+            </div>
+
+            <div class="story-summary">
+              <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 비 26°</span>
+              <span class="badge neutral">완료 3 · 사진 1</span>
+            </div>
+
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-time">07:30</div>
+                <div class="tl-card">
+                  <div class="tl-head">
+                    <div class="tl-title">우산 챙기기</div>
+                    <div class="tl-badges">
+                      <span class="badge neutral">일상</span>
+                      <i class="ph ph-check-circle moment-check"></i>
+                    </div>
+                  </div>
+                  <div class="tl-sub">비 예보로 아침에 자동 추천</div>
+                </div>
+              </div>
+
+              <div class="tl-item">
+                <div class="tl-time">08:00</div>
+                <div class="tl-card">
+                  <div class="tl-head">
+                    <div class="tl-title">필라테스</div>
+                    <div class="tl-badges">
+                      <span class="badge neutral">운동</span>
+                      <i class="ph ph-check-circle moment-check"></i>
+                    </div>
+                  </div>
+                  <div class="tl-sub">이번 주 3회째</div>
+                </div>
+              </div>
+
+              <div class="tl-item">
+                <div class="tl-time">20:00</div>
+                <div class="tl-card">
+                  <div class="tl-head">
+                    <div class="tl-title">민지와 저녁</div>
+                    <div class="tl-badges">
+                      <span class="badge neutral">약속</span>
+                    </div>
+                  </div>
+                  <img class="tl-thumb" src="https://picsum.photos/seed/cafe-evening/480/270" alt="성수 저녁 사진">
+                  <div class="tl-quote">오랜만에 언니랑. 빵이 맛있었다</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 스텝 1+: 내가 얹은 한 줄 -->
+            <div class="day-line" data-show="1,2,3">
+              <div class="lbl"><i class="ph ph-quotes"></i> 내가 얹은 한 줄</div>
+              <p>비 오는 날은 역시 빵.</p>
+            </div>
+
+            <!-- 스텝 0: 한 줄 남기기 진입점 -->
+            <button class="day-line-entry" data-show="0">
+              <i class="ph ph-plus-circle"></i> 오늘에 한 줄 남기기
+            </button>
+
+            <!-- 스텝 3: 공유 힌트 -->
+            <div class="share-hint" data-show="3">
+              <i class="ph ph-share-network"></i> 이 하루 카드가 그대로 공유 카드(06)가 됩니다
+            </div>
+          </article>
+
+          <!-- 어제: 축약 카드 (스텝 2+) -->
+          <article class="story muted" data-show="2,3">
+            <div class="story-head">
+              <div>
+                <div class="story-date">7월 15일 <span class="story-dow">수요일</span></div>
+              </div>
+            </div>
+            <div class="story-summary">
+              <span class="badge neutral">완료 2 · 루틴 1</span>
+            </div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-time">07:00</div>
+                <div class="tl-card">
+                  <div class="tl-head">
+                    <div class="tl-title">달리기 5km</div>
+                    <div class="tl-badges"><span class="badge neutral">운동</span><i class="ph ph-check-circle moment-check"></i></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">22:30</div>
+                <div class="tl-card">
+                  <div class="tl-head">
+                    <div class="tl-title">책 30쪽 읽기</div>
+                    <div class="tl-badges"><span class="badge neutral">기록</span><i class="ph ph-check-circle moment-check"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 지난: 축약 카드 (스텝 2+) -->
+          <article class="story muted" data-show="2,3">
+            <div class="story-head">
+              <div>
+                <div class="story-date">7월 12일 <span class="story-dow">토요일</span></div>
+              </div>
+            </div>
+            <div class="story-summary">
+              <span class="badge neutral">완료 1 · 사진 1</span>
+            </div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-time">12:30</div>
+                <div class="tl-card">
+                  <div class="tl-head">
+                    <div class="tl-title">본가 점심</div>
+                    <div class="tl-badges"><span class="badge neutral">가족</span></div>
+                  </div>
+                  <img class="tl-thumb sm" src="https://picsum.photos/seed/family-lunch/480/160" alt="본가 점심 사진">
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">새김 · 스토리</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <h2>새김 · 스토리</h2>
+    <p class="lead">일기는 "써야 하는 부담"입니다. 새김은 완료·사진·날씨를 하루 스토리로 자동 조립하고, 원하면 한 줄만 얹습니다. 기록이 아니라 기억이 남습니다.</p>
+    <div class="step-controls">
+      <button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button>
+      <button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button>
+    </div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-eye"></i><span>일기가 아니라 자동 조립 + 선택적 한 줄이라 기록 부담이 제로입니다. 투두메이트는 AI로 일기를 대신 써주지만, 새김은 결정론적 조립(LLM 없음)으로 같은 부담을 해결합니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>하루 스토리 카드가 그대로 공유 카드(06)의 원천입니다. 만든 기억을 그대로 내보내는 바이럴 루프.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>카테고리 배지(약속·운동·일상·기록·가족)가 쌓이면 한 달의 삶 패턴이 눈에 보입니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>배지는 액센트 1개 원칙에 따라 색을 분화하지 않고 중립 톤으로 통일, 사진과 한 줄에만 시선이 갑니다.</span></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+  window.STEPS = [
+    { title: "오늘, 저절로 쌓인 하루", note: "완료·사진·날씨가 한 카드로 자동 조립됩니다." },
+    { title: "한 줄만 얹기", note: "\"비 오는 날은 역시 빵\" 한 줄이 카드에 합류합니다." },
+    { title: "지난 날들", note: "스크롤하면 어제·지난 카드가 펼쳐집니다." },
+    { title: "그대로 공유", note: "하루 카드가 곧 공유 카드(06)가 됩니다." }
+  ];
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>

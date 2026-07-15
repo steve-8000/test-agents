@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saegim · 홈 Week 뷰</title>
+<title>Saegim · 홈 오늘</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
@@ -11,24 +11,60 @@
 <link rel="stylesheet" href="assets/base.css">
 <style>
   /* 페이지 전용 스타일 (값은 전부 var() 토큰 참조) */
-  .day.sel { box-shadow: inset 0 0 0 2px var(--accent); color: var(--fg); }
-  .day.sel .num { color: var(--accent); }
-  .compose-pill.tapped {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-lg);
-    color: var(--fg);
+
+  /* navbar: 좁은 날짜라벨을 큰 타이틀 위로 (DOM 순서로 배치) */
+  .navbar .datelabel { font: var(--text-sm); color: var(--fg-muted); margin-bottom: 2px; }
+  .navbar .title { line-height: 30px; }
+
+  /* 스케줄: 지난 일정은 눌러 표현, 다가올 일정 카드에 강조 */
+  .tl-item .tl-title { font: var(--text-body); font-weight: 600; color: var(--fg); }
+  .tl-item .tl-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 2px; word-break: keep-all; }
+  .tl-item.muted .tl-title { color: var(--fg-muted); font-weight: 500; }
+  .tl-card .tl-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--sp-2); margin-top: var(--sp-2);
   }
-  .compose-pill.tapped .ph { color: var(--accent); }
-  .habit-name { margin-top: var(--sp-1); }
-  /* data-show 가시 요소의 자연 display 복원 (base.css [data-show]{none} 대비 특이도 상향) */
-  .screen .row[data-show] { display: flex; }
+  .tl-card .detail-hint { font: var(--text-sm); color: var(--fg-muted); display: inline-flex; align-items: center; gap: var(--sp-1); }
+
+  /* 스텝 2: 다가올 스케줄 카드 포커스 */
+  #dinnerCard { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+  body[data-step="2"] #dinnerCard { border-color: var(--accent); box-shadow: var(--shadow-md); }
+  body[data-step="2"] #dinnerCard .detail-hint { color: var(--accent); }
+
+  /* 스텝 3: 스토리 아이콘 강조 + 안내 콜아웃 */
+  .chron-btn { position: relative; }
+  body[data-step="3"] .chron-btn { background: var(--accent); color: var(--accent-fg); }
+  body[data-step="3"] .chron-btn::after {
+    content: ""; position: absolute; inset: -5px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--accent);
+    animation: pulse 1.4s ease-out infinite;
+  }
+  @keyframes pulse { 0% { transform: scale(0.85); opacity: 0.8; } 100% { transform: scale(1.35); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { body[data-step="3"] .chron-btn::after { animation: none; opacity: 0.5; } }
+
+  .cue {
+    display: flex; align-items: center; gap: var(--sp-2);
+    margin: var(--sp-1) var(--sp-4) 0;
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--accent-soft); color: var(--accent);
+    border-radius: var(--radius-input);
+    font: var(--text-sm);
+  }
+  .cue .ph { flex: none; font-size: 16px; }
+
+  /* 루틴 로우: 우측 페이드로 가로 스크롤 어포던스 명시 (마스크 알파, 색 아님) */
+  .routine-row {
+    -webkit-mask-image: linear-gradient(to right, hsl(0 0% 0%) 86%, transparent);
+    mask-image: linear-gradient(to right, hsl(0 0% 0%) 86%, transparent);
+  }
 </style>
 </head>
 <body>
 <header class="shell-header">
   <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
   <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
-  <div class="crumb">02 · 홈 Week 뷰</div>
+  <div class="crumb">02 · 홈 오늘</div>
   <div class="spacer"></div>
   <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
 </header>
@@ -42,111 +78,115 @@
 
           <div class="navbar">
             <div>
-              <div class="title">WEEK 29</div>
-              <div class="sub">7월 13일 - 19일</div>
+              <div class="datelabel">7월 16일 목요일</div>
+              <div class="title">오늘</div>
             </div>
             <div class="spacer"></div>
-            <button class="icon-btn"><i class="ph ph-calendar-blank"></i></button>
+            <a href="07-timeline.html" class="icon-btn chron-btn" style="text-decoration:none;" aria-label="스토리"><i class="ph ph-book-open"></i></a>
+            <button class="icon-btn" aria-label="캘린더"><i class="ph ph-calendar-dots"></i></button>
           </div>
 
           <div class="week-strip">
             <div class="day" data-day="mon"><span>월</span><span class="num">13</span><span class="dot"></span></div>
             <div class="day" data-day="tue"><span>화</span><span class="num">14</span><span class="dot"></span></div>
-            <div class="day today" data-day="wed"><span>수</span><span class="num">15</span><span class="dot"></span></div>
-            <div class="day has-events" data-day="thu"><span>목</span><span class="num">16</span><span class="dot"></span></div>
-            <div class="day has-events" data-day="fri"><span>금</span><span class="num">17</span><span class="dot"></span></div>
+            <div class="day" data-day="wed"><span>수</span><span class="num">15</span><span class="dot"></span></div>
+            <div class="day today" data-day="thu"><span>목</span><span class="num">16</span><span class="dot"></span></div>
+            <div class="day" data-day="fri"><span>금</span><span class="num">17</span><span class="dot"></span></div>
             <div class="day" data-day="sat"><span>토</span><span class="num">18</span><span class="dot"></span></div>
             <div class="day" data-day="sun"><span>일</span><span class="num">19</span><span class="dot"></span></div>
           </div>
 
-          <div class="section-label">Habits</div>
-          <div class="rings">
-            <div class="ring">
-              <svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p1" r="23" cx="26" cy="26" stroke-dasharray="98 144.5"></circle></svg>
-              <span class="habit-name">달리기</span>
+          <!-- (1) 루틴 -->
+          <div class="section-label">루틴</div>
+          <div class="routine-row">
+            <div class="routine-chip done">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p1" r="23" cx="26" cy="26" stroke-dasharray="144.5 144.5"></circle></svg></span>
+              <div>
+                <div class="r-name">달리기</div>
+                <div class="r-streak">12일째</div>
+              </div>
             </div>
-            <div class="ring">
-              <svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p2" r="23" cx="26" cy="26" stroke-dasharray="65 144.5"></circle></svg>
-              <span class="habit-name">피아노</span>
+
+            <div class="routine-chip">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p2" r="23" cx="26" cy="26" stroke-dasharray="58 144.5"></circle></svg></span>
+              <div>
+                <div class="r-name">영어 단어</div>
+                <div class="r-streak">5일째</div>
+              </div>
             </div>
-            <div class="ring">
-              <svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p3" r="23" cx="26" cy="26" stroke-dasharray="118 144.5"></circle></svg>
-              <span class="habit-name">웨이트</span>
+
+            <!-- 필라테스: 예정 상태 (스텝 0,2,3) -->
+            <div class="routine-chip" data-show="0,2,3">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p3" r="23" cx="26" cy="26" stroke-dasharray="8 144.5"></circle></svg></span>
+              <div>
+                <div class="r-name">필라테스</div>
+                <div class="r-streak">화·목 19:00 예정</div>
+              </div>
+            </div>
+            <!-- 필라테스: 체크 완료 상태 (스텝 1) -->
+            <div class="routine-chip done" data-show="1">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p3" r="23" cx="26" cy="26" stroke-dasharray="144.5 144.5"></circle></svg></span>
+              <div>
+                <div class="r-name">필라테스</div>
+                <div class="r-streak">1일째 시작</div>
+              </div>
             </div>
           </div>
 
-          <div class="section-label">Today</div>
+          <!-- (2) 스케줄 -->
+          <div class="section-label">스케줄</div>
+          <div class="timeline">
+            <div class="tl-item muted">
+              <div class="tl-time">10:00</div>
+              <div class="tl-card">
+                <div class="tl-title">팀 위클리</div>
+                <div class="tl-sub">온라인 · 주간 회고 · 지남</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">20:00</div>
+              <div class="tl-card" id="dinnerCard">
+                <div class="tl-title">민지와 저녁</div>
+                <div class="tl-sub">성수 브릭 베이커리</div>
+                <div class="tl-foot">
+                  <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 26° · 강수 60%</span>
+                  <span class="detail-hint">상세 <i class="ph ph-caret-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- (3) 투두 -->
+          <div class="section-label">투두</div>
           <div class="card">
             <div class="row">
-              <i class="ph ph-phone ctx"></i>
+              <span class="checkbox"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">우산 챙기기</div>
+                <div class="row-sub">비 소식, 우산 챙기세요</div>
+              </div>
+              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
+            </div>
+            <div class="row">
+              <span class="checkbox"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">장보기</div>
+                <div class="row-sub">저녁 재료 · 두부, 대파, 달걀</div>
+              </div>
+            </div>
+            <div class="row">
+              <span class="checkbox"><i class="ph ph-check"></i></span>
               <div class="row-main">
                 <div class="row-title">김민지님께 전화</div>
                 <div class="row-sub">지난주 부재중 답신</div>
               </div>
-              <div class="row-meta"><i class="ph ph-caret-right"></i></div>
-            </div>
-
-            <div class="row" data-show="0,2,3">
-              <span class="checkbox"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">우산 챙기기</div>
-                <div class="row-sub">비 소식, 우산 챙기세요</div>
-              </div>
-              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
-            </div>
-            <div class="row done" data-show="1">
-              <span class="checkbox checked"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">우산 챙기기</div>
-                <div class="row-sub">비 소식, 우산 챙기세요</div>
-              </div>
-              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
-            </div>
-
-            <div class="row">
-              <span class="checkbox"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">장보기 - 저녁 재료</div>
-                <div class="row-sub">두부, 대파, 달걀</div>
-              </div>
-            </div>
-
-            <div class="row">
-              <span class="checkbox event"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">팀 위클리</div>
-                <div class="row-sub">온라인 · 주간 회고</div>
-              </div>
-              <div class="row-meta">10:00 <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i></span></div>
+              <div class="row-meta"><i class="ph ph-phone ctx"></i></div>
             </div>
           </div>
 
-          <div class="section-label">This Week</div>
-          <div class="card">
-            <div class="row">
-              <span class="checkbox event"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">피아노 레슨</div>
-                <div class="row-sub">성수동 · 목요일</div>
-              </div>
-              <div class="row-meta">13:00</div>
-            </div>
-            <div class="row">
-              <span class="checkbox event"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">성수 브릭 베이커리 픽업</div>
-                <div class="row-sub">연무장길 24-8 · 금요일</div>
-              </div>
-              <div class="row-meta">18:00</div>
-            </div>
-            <div class="row">
-              <span class="checkbox"><i class="ph ph-check"></i></span>
-              <div class="row-main">
-                <div class="row-title">주말 등산 준비</div>
-                <div class="row-sub">민지 언니와 청계산</div>
-              </div>
-              <div class="row-meta">토</div>
-            </div>
+          <div class="cue" data-show="3">
+            <i class="ph ph-book-open"></i>
+            <span>완료된 기록은 스토리로 새겨집니다</span>
           </div>
 
           <div class="compose-pill" id="composePill">
@@ -158,41 +198,34 @@
         </div>
         <div class="homebar"></div>
       </div>
-      <div class="device-label">홈 · Week</div>
+      <div class="device-label">홈 · 오늘</div>
     </div>
   </div>
 
   <aside class="notes">
-    <h2>홈 Week 뷰</h2>
-    <p class="lead">한 주를 한 화면에 - 습관 링, 오늘 할 일, 이번 주 일정, 그리고 어디서든 적기 시작하는 입력 pill.</p>
+    <h2>홈 · 오늘</h2>
+    <p class="lead">투두·스케줄·루틴 세 분류가 한 화면에 공존하되 위계는 또렷하게. 완료의 기록은 스토리로 이어집니다.</p>
     <div class="step-controls">
       <button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button>
       <button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button>
     </div>
     <ol class="step-list"></ol>
     <div class="review-points">
-      <div class="pt"><i class="ph ph-eye"></i><span>습관 링 3개는 서로 다른 진행률을 하나의 액센트 계열로 표현 - 색 남용 없이 구분.</span></div>
-      <div class="pt"><i class="ph ph-eye"></i><span>투두 체크 시 완료선과 성공 색으로 즉시 피드백.</span></div>
-      <div class="pt"><i class="ph ph-eye"></i><span>이벤트는 사각 체크, 투두는 원형 체크로 종류를 구분.</span></div>
-      <div class="pt"><i class="ph ph-eye"></i><span>입력 pill은 03 컴포즈 화면으로 진입하는 유일한 관문.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>루틴은 등록된 것만 표시 - 컴포즈에서 반복 표현을 감지하면 자동 등록되어 이 줄에 스트릭으로 쌓입니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>시간이 있는 것은 스케줄 타임라인, 시간이 없는 것은 투두 체크리스트로 분리 - 3분류가 공존해도 혼동이 없습니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>액센트는 핑크 하나 - 완료 상태만 그린 의미색을 씁니다. 루틴 링·오늘 표시·강조 카드는 전부 핑크 계열.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>스토리 아이콘은 완료 기록으로 가는 관문 - 오늘을 마치면 새김이 축적됩니다.</span></div>
     </div>
   </aside>
 </main>
 
 <script>
   window.STEPS = [
-    { title: "주간 개요", note: "습관 링, 오늘, 이번 주가 한 화면에." },
-    { title: "투두 체크", note: "우산 챙기기 완료 - 완료선과 성공 색." },
-    { title: "요일 이동", note: "목요일을 탭해 다른 날을 선택." },
-    { title: "적기 시작", note: "입력 pill 강조 - 03 컴포즈로 진입." }
+    { title: "3분류 구조", note: "루틴·스케줄·투두가 한 화면에." },
+    { title: "필라테스 체크", note: "반복 감지로 등록된 루틴 시작 - 1일째." },
+    { title: "스케줄 포커스", note: "다가올 저녁, 날씨와 상세 진입." },
+    { title: "스토리 관문", note: "완료 기록은 스토리로 새겨짐." }
   ];
-  document.addEventListener("stepchange", (e) => {
-    const s = e.detail.step;
-    const thu = document.querySelector('[data-day="thu"]');
-    if (thu) thu.classList.toggle("sel", s === 2);
-    const pill = document.getElementById("composePill");
-    if (pill) pill.classList.toggle("tapped", s === 3);
-  });
 </script>
 <script src="assets/app.js"></script>
 </body>

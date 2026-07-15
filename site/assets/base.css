@@ -463,6 +463,77 @@ body {
   background: transparent; cursor: pointer;
 }
 
+/* ---------- v2 공용 컴포넌트 ---------- */
+
+/* 3분류 세그먼트: 할 일 / 일정 / 루틴 */
+.segment.three { grid-template-columns: repeat(3, 1fr); width: 248px; }
+
+/* 루틴 칩(가로 스크롤): 미니 링 + 이름 + 스트릭 */
+.routine-row {
+  display: flex; gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4) var(--sp-3);
+  overflow-x: auto; scrollbar-width: none;
+}
+.routine-row::-webkit-scrollbar { display: none; }
+.routine-chip {
+  flex: none;
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.routine-chip .ring svg { width: 28px; height: 28px; }
+.routine-chip .ring circle { stroke-width: 3.5; }
+.routine-chip .r-name { font: var(--text-sm); font-weight: 600; color: var(--fg); }
+.routine-chip .r-streak { font: var(--text-xs); letter-spacing: 0; text-transform: none; color: var(--fg-muted); }
+.routine-chip.done { border-color: var(--success); }
+.routine-chip.done .r-streak { color: var(--success); }
+
+/* 패턴 제안 칩(컴포즈 빈 입력) */
+.chip-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chip {
+  display: inline-flex; align-items: center; gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font: var(--text-sm); color: var(--fg);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+.chip .ph { color: var(--fg-muted); font-size: 15px; }
+
+/* 세로 타임라인(연대기·홈 스케줄 축) */
+.timeline { position: relative; padding: var(--sp-2) var(--sp-4); }
+.tl-item { position: relative; display: flex; gap: var(--sp-3); padding: 0 0 var(--sp-4) var(--sp-5); }
+.tl-item::before { /* 세로 라인 */
+  content: ""; position: absolute; left: 5px; top: 6px; bottom: calc(-1 * var(--sp-1));
+  width: 1.5px; background: var(--border);
+}
+.tl-item:last-child::before { display: none; }
+.tl-item::after { /* dot */
+  content: ""; position: absolute; left: 0; top: 6px;
+  width: 11px; height: 11px; border-radius: var(--radius-pill);
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.tl-item.muted::after { background: var(--border-strong); }
+.tl-time { flex: none; width: 44px; font: var(--text-sm); color: var(--fg-muted); padding-top: 2px; }
+.tl-card {
+  flex: 1; min-width: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--sp-3) var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+.tl-date-label {
+  font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  color: var(--fg-muted);
+  padding: var(--sp-3) 0 var(--sp-2) var(--sp-5);
+}
+
 /* 스텝 상태 머신: body[data-step] + .step-on 토글 (app.js)
    숨김은 !important로 페이지별 display 오버라이드보다 항상 우선하고,
    .step-on이 붙으면 이 규칙이 빠지면서 원래 display가 복원된다. */

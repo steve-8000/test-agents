@@ -19,6 +19,7 @@ configMapGenerator:
       - site/04-event-detail.html
       - site/05-complete.html
       - site/06-share-card.html
+      - site/07-timeline.html
   - name: test-agents-assets
     files:
       - site/assets/tokens.css

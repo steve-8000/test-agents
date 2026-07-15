@@ -33,6 +33,8 @@
   .compose-top .segment[data-show] { display: grid; }
   .compose-body .suggest[data-show] { display: flex; }
   .compose-toolbar .tool[data-show] { display: grid; }
+  .compose-screen .predict[data-show] { display: grid; }
+  .compose-screen .keyboard[data-show] { display: flex; }
 </style>
 </head>
 <body>
@@ -54,8 +56,9 @@
 
             <div class="compose-top">
               <button class="icon-btn"><i class="ph ph-x"></i></button>
-              <div class="segment" data-show="0,1"><button class="on">할 일</button><button>이벤트</button></div>
-              <div class="segment" data-show="2,3,4,5,6"><button>할 일</button><button class="on">이벤트</button></div>
+              <div class="segment three" data-show="0,1"><button class="on">투두</button><button>스케줄</button><button>루틴</button></div>
+              <div class="segment three" data-show="2,3,4,5,6,7"><button>투두</button><button class="on">스케줄</button><button>루틴</button></div>
+              <div class="segment three" data-show="8,9"><button>투두</button><button>스케줄</button><button class="on">루틴</button></div>
             </div>
 
             <div class="compose-body">
@@ -65,7 +68,17 @@
               <div class="compose-input" data-show="3"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 민지<span class="caret"></span></div>
               <div class="compose-input" data-show="4"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑<span class="caret"></span></div>
               <div class="compose-input" data-show="5"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑 성수 카<span class="caret"></span></div>
-              <div class="compose-input" data-show="6"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑 <span class="tk">성수 카페</span>에서 저녁<span class="caret"></span></div>
+              <div class="compose-input" data-show="6,7"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑 <span class="tk">성수 카페</span>에서 저녁<span class="caret"></span></div>
+              <div class="compose-input" data-show="8,9"><span class="tk">매주 화·목</span> <span class="tk">오후 7시</span> 필라테스<span class="caret"></span></div>
+
+              <div class="suggest" data-show="0">
+                <div class="suggest-title">이 시간에 자주</div>
+                <div class="chip-row">
+                  <button class="chip"><i class="ph ph-basket"></i> 장보기 · 수요일 오후</button>
+                  <button class="chip"><i class="ph ph-phone"></i> 김민지님께 전화 · 미루던 연락</button>
+                  <button class="chip"><i class="ph ph-barbell"></i> 필라테스 19:00 · 루틴 예정</button>
+                </div>
+              </div>
 
               <div class="suggest" data-show="1">
                 <div class="suggest-title">내일 · 기존 일정</div>
@@ -108,23 +121,42 @@
                   <div class="c-main"><div class="c-name">카페 온화 성수점</div><div class="c-sub">서울 성동구 왕십리로 96</div></div>
                 </div>
               </div>
+
+              <div class="suggest" data-show="7">
+                <div class="suggest-title">카테고리</div>
+                <div class="candidate">
+                  <div class="avatar square"><i class="ph ph-users-three"></i></div>
+                  <div class="c-main"><div class="c-name">약속으로 분류됨 <span class="badge">약속</span></div><div class="c-sub">사람과 장소를 동시에 인식했어요 · 탭해서 변경</div></div>
+                  <i class="ph ph-caret-right"></i>
+                </div>
+              </div>
+
+              <div class="suggest" data-show="9">
+                <div class="suggest-title">루틴 등록</div>
+                <div class="candidate">
+                  <div class="avatar square"><i class="ph ph-repeat"></i></div>
+                  <div class="c-main"><div class="c-name">루틴으로 등록됨</div><div class="c-sub">필라테스 · 매주 화·목 19:00 · 홈 루틴 섹션에 표시됩니다</div></div>
+                  <i class="ph ph-check"></i>
+                </div>
+              </div>
             </div>
 
             <div class="compose-toolbar">
               <button class="tool"><i class="ph ph-calendar-blank"></i></button>
-              <button class="tool" data-show="2,3,4,5,6"><i class="ph ph-clock"></i></button>
+              <button class="tool" data-show="2,3,4,5,6,7,8,9"><i class="ph ph-clock"></i></button>
               <button class="tool"><i class="ph ph-map-pin"></i></button>
               <button class="tool"><i class="ph ph-at"></i></button>
+              <button class="tool" data-show="8,9"><i class="ph ph-repeat"></i></button>
               <div class="spacer"></div>
               <button class="submit-btn" id="submitBtn"><i class="ph ph-arrow-up"></i></button>
             </div>
 
-            <div class="predict">
+            <div class="predict" data-show="0,1,2,3,4,5,6,8">
               <span>내일</span>
               <span>오후</span>
               <span>민지랑</span>
             </div>
-            <div class="keyboard">
+            <div class="keyboard" data-show="0,1,2,3,4,5,6,8">
               <div class="krow">
                 <span class="key">ㅂ</span><span class="key">ㅈ</span><span class="key">ㄷ</span><span class="key">ㄱ</span><span class="key">ㅅ</span><span class="key">ㅛ</span><span class="key">ㅕ</span><span class="key">ㅐ</span>
               </div>
@@ -149,34 +181,39 @@
 
   <aside class="notes">
     <h2>컴포즈 - 문장이 일정이 되는 순간</h2>
-    <p class="lead">한 문장을 그대로 적으면 날짜, 시간, 사람, 장소가 토큰으로 잡히고 구조화 필드로 확정됩니다.</p>
+    <p class="lead">빈 입력에서는 이 시간에 자주 쓰는 문장을 제안하고, 한 문장을 적으면 날짜/시간/사람/장소가 토큰으로 잡혀 스케줄 또는 루틴으로 확정됩니다.</p>
     <div class="step-controls">
       <button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button>
       <button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button>
     </div>
     <ol class="step-list"></ol>
     <div class="review-points">
+      <div class="pt"><i class="ph ph-magic-wand"></i><span>빈 입력에서 자주 쓰는 문장 3개를 제안 - 칩을 탭하면 문장이 미리 채워집니다.</span></div>
       <div class="pt"><i class="ph ph-lock-key"></i><span>토큰 확정 = 구조화 필드 lock. 하이라이트된 토큰은 날짜/시간/사람/장소 필드로 고정됩니다.</span></div>
-      <div class="pt"><i class="ph ph-calendar-check"></i><span>기존 일정과 연계 (요구사항 5). 날짜 인식 즉시 그 날의 기존 일정을 함께 보여줍니다.</span></div>
-      <div class="pt"><i class="ph ph-eye"></i><span>시간을 인식하면 세그먼트가 할 일에서 이벤트로 자동 전환됩니다.</span></div>
-      <div class="pt"><i class="ph ph-eye"></i><span>사람/장소 후보는 하나의 액센트 계열로만 표시 - 색 남용 없음.</span></div>
+      <div class="pt"><i class="ph ph-calendar-check"></i><span>날짜 인식 즉시 그 날의 기존 일정을 함께 보여줍니다 (요구사항 5).</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>시간을 인식하면 세그먼트가 투두에서 스케줄로 자동 전환됩니다.</span></div>
+      <div class="pt"><i class="ph ph-tag"></i><span>사람과 장소를 동시에 인식하면 약속 카테고리로 자동 분류 - 탭해서 변경할 수 있습니다.</span></div>
+      <div class="pt"><i class="ph ph-repeat"></i><span>매주 화·목 같은 반복 표현을 만나면 루틴으로 전환 - 등록하면 02 홈 루틴 섹션에 표시됩니다.</span></div>
     </div>
   </aside>
 </main>
 
 <script>
   window.STEPS = [
-    { title: "빈 입력", note: "커서만 깜빡이는 시작. 세그먼트는 할 일." },
+    { title: "빈 입력", note: "자주 쓰는 문장 3개를 패턴으로 제안. 세그먼트는 투두." },
     { title: "날짜 인식", note: "내일이 토큰으로 - 그 날 기존 일정 프리뷰." },
-    { title: "시간 인식", note: "오후 8시 토큰 + 이벤트로 자동 전환." },
+    { title: "시간 인식", note: "오후 8시 토큰 + 스케줄로 자동 전환." },
     { title: "사람 후보", note: "민지랑 - 연락처 후보 2건 제시." },
     { title: "사람 확정", note: "민지를 선택해 토큰으로 삽입." },
     { title: "장소 후보", note: "성수 카 - 장소 후보 2건 제시." },
-    { title: "문장 완성", note: "토큰 4개 확정, 저장 버튼 강조." }
+    { title: "문장 완성", note: "토큰 4개 확정, 저장 버튼 강조." },
+    { title: "카테고리 자동 분류", note: "사람+장소 동시 인식 - 약속으로 분류." },
+    { title: "루틴 자동 전환", note: "매주 화·목 반복 표현 감지 - 루틴으로 전환." },
+    { title: "루틴 등록 확인", note: "홈 루틴 섹션에 표시 - 스트릭 시작." }
   ];
   document.addEventListener("stepchange", (e) => {
     const btn = document.getElementById("submitBtn");
-    if (btn) btn.classList.toggle("ready", e.detail.step === 6);
+    if (btn) btn.classList.toggle("ready", e.detail.step === 6 || e.detail.step === 7);
   });
 </script>
 <script src="assets/app.js"></script>
