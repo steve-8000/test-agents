@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 설정</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  /* 페이지 전용 스타일 (색/폰트는 전부 var() 토큰 참조) */
+
+  /* 설정 네비바: 뒤로 + 큰 제목 */
+  .set-nav { gap: var(--sp-2); }
+  .set-nav .title { font: var(--text-display); letter-spacing: -0.02em; }
+
+  /* iOS 스위치: 트랙 var(--bg-inset), on일 때 var(--accent), knob var(--bg-elevated) */
+  .switch {
+    position: relative; flex: none;
+    width: 44px; height: 26px;
+    border: none; padding: 0; cursor: pointer;
+    border-radius: var(--radius-pill);
+    background: var(--bg-inset);
+    transition: background 0.25s ease;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.25s ease;
+  }
+  .switch.on { background: var(--accent); }
+  .switch.on::after { transform: translateX(18px); }
+  @media (prefers-reduced-motion: reduce) {
+    .switch, .switch::after { transition: none; }
+  }
+
+  /* 프로필 아바타 */
+  .pf-avatar {
+    flex: none; width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft); color: var(--accent);
+    font: var(--text-title);
+  }
+
+  /* 스마트 기능 그룹 */
+  .smart-master .row-sub { max-width: 34ch; }
+  .device-badge { margin-top: var(--sp-2); }
+
+  /* 하위 3행: 마스터 ON(스텝 1)에서만 활성, 그 외엔 faint + 비활성 */
+  .sub-rows { border-top: 1px solid var(--border); transition: opacity 0.25s ease; }
+  body:not([data-step="1"]) .sub-rows { opacity: 0.4; pointer-events: none; }
+  body[data-step="1"] .sub-switch { background: var(--accent); }
+  body[data-step="1"] .sub-switch::after { transform: translateX(18px); }
+
+  /* 마스터 스위치: 스텝 1에서 ON 표현 */
+  body[data-step="1"] .master-switch { background: var(--accent); }
+  body[data-step="1"] .master-switch::after { transform: translateX(18px); }
+
+  .master-lock { flex: none; color: var(--fg-muted); font-size: 20px; }
+
+  /* 규칙 기반 상시 동작 안내 (마스터 OFF에서도 코어 100%) */
+  .smart-foot {
+    display: flex; align-items: center; gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4) 0;
+    font: var(--text-xs); letter-spacing: 0; text-transform: none;
+    color: var(--fg-muted); word-break: keep-all;
+  }
+  .smart-foot .ph { flex: none; color: var(--success); font-size: 15px; }
+
+  /* 미지원 기기 안내 카드 */
+  .notice {
+    display: flex; gap: var(--sp-3);
+    margin: var(--sp-3) var(--sp-3) 0;
+    padding: var(--sp-4);
+    background: var(--bg-inset);
+    border-radius: var(--radius-card);
+  }
+  .notice > .ph { flex: none; color: var(--fg-muted); font-size: 20px; margin-top: 1px; }
+  .notice .n-title { font: var(--text-body); font-weight: 600; color: var(--fg); }
+  .notice .n-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: var(--sp-1); word-break: keep-all; }
+  .notice .n-core {
+    display: flex; align-items: center; gap: var(--sp-1);
+    margin-top: var(--sp-2);
+    font: var(--text-sm); color: var(--success); word-break: keep-all;
+  }
+  .notice .n-core .ph { flex: none; }
+
+  /* 인라인 연결 버튼 */
+  .btn-inline {
+    flex: none; padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-strong);
+    background: transparent; color: var(--accent);
+    font: var(--text-sm); font-weight: 600; cursor: pointer;
+  }
+  .btn-inline:hover { border-color: var(--accent); }
+
+  /* 세그먼트 3분할(테마) */
+  .segment.theme3 { grid-template-columns: repeat(3, 1fr); width: 100%; }
+
+  /* 버전 메타값 */
+  .meta-val { flex: none; font: var(--text-sm); color: var(--fg-faint); }
+
+  /* 라이선스 진입 행 강조(스텝 3) */
+  #licenseRow { transition: background 0.2s ease; }
+  body[data-step="3"] #licenseRow { background: var(--accent-soft); }
+
+  /* 라이선스 시트 */
+  .sheet-title { font: var(--text-title); color: var(--fg); }
+  .sheet-lead { font: var(--text-sm); color: var(--fg-muted); margin: var(--sp-1) 0 var(--sp-4); word-break: keep-all; }
+  .sheet .card { margin: 0; }
+  .license-note {
+    display: flex; gap: var(--sp-2);
+    margin-top: var(--sp-4);
+    font: var(--text-sm); color: var(--fg-muted); word-break: keep-all;
+  }
+  .license-note .ph { flex: none; color: var(--accent); margin-top: 1px; }
+
+  .set-foot { height: var(--sp-8); }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">08 · 설정</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+
+<main class="shell-main">
+  <div class="stage">
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+
+          <div class="navbar set-nav">
+            <a href="02-home-week.html" class="icon-btn" style="text-decoration:none;" aria-label="뒤로"><i class="ph ph-arrow-left"></i></a>
+            <div class="title">설정</div>
+          </div>
+
+          <!-- 프로필 -->
+          <div class="card">
+            <div class="row">
+              <span class="pf-avatar">지</span>
+              <div class="row-main">
+                <div class="row-title">지우</div>
+                <div class="row-sub">Apple 계정 연결됨</div>
+              </div>
+              <i class="ph ph-caret-right ctx"></i>
+            </div>
+          </div>
+
+          <!-- 스마트 기능 -->
+          <div class="section-label">스마트 기능</div>
+          <div class="card">
+            <div class="row smart-master">
+              <div class="row-main">
+                <div class="row-title">Apple Intelligence 보강</div>
+                <div class="row-sub">모든 처리는 기기 안에서 끝납니다. 서버로 보내지 않아요.</div>
+                <span class="badge device-badge" data-show="1"><i class="ph-fill ph-shield-check"></i> 기기 안 처리</span>
+              </div>
+              <button class="switch master-switch" data-show="0,1,3" aria-label="Apple Intelligence 보강"></button>
+              <i class="ph ph-lock master-lock" data-show="2" aria-hidden="true"></i>
+            </div>
+
+            <div class="sub-rows">
+              <div class="row">
+                <div class="row-main"><div class="row-title">스토리 한 줄 제안</div></div>
+                <button class="switch sub-switch" aria-label="스토리 한 줄 제안"></button>
+              </div>
+              <div class="row">
+                <div class="row-main"><div class="row-title">애매한 문장 파싱 보조</div></div>
+                <button class="switch sub-switch" aria-label="애매한 문장 파싱 보조"></button>
+              </div>
+              <div class="row">
+                <div class="row-main"><div class="row-title">카테고리 분류 보조</div></div>
+                <button class="switch sub-switch" aria-label="카테고리 분류 보조"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="smart-foot">
+            <i class="ph ph-check-circle"></i>
+            <span>꺼져 있어도 투두·스케줄·루틴 파싱은 규칙 기반으로 그대로 동작해요.</span>
+          </div>
+
+          <!-- 미지원 기기 안내 (스텝 2) -->
+          <div class="notice" data-show="2">
+            <i class="ph ph-lock"></i>
+            <div>
+              <div class="n-title">이 기기에서는 보강 기능을 켤 수 없어요</div>
+              <div class="n-sub">iPhone 15 Pro 이상 등 Apple Intelligence 활성화 기기에서 사용할 수 있어요.</div>
+              <div class="n-core"><i class="ph ph-check-circle"></i> 그래도 파싱·분류·루틴은 규칙 기반으로 100% 동작합니다.</div>
+            </div>
+          </div>
+
+          <!-- 연동 -->
+          <div class="section-label">연동</div>
+          <div class="card">
+            <div class="row">
+              <div class="row-main">
+                <div class="row-title">Apple 캘린더·리마인더</div>
+              </div>
+              <span class="badge ok"><i class="ph ph-check"></i> 연결됨</span>
+            </div>
+            <div class="row">
+              <div class="row-main">
+                <div class="row-title">Google 캘린더</div>
+                <div class="row-sub">연결 안 됨</div>
+              </div>
+              <button class="btn-inline">연결</button>
+            </div>
+          </div>
+
+          <!-- 알림 -->
+          <div class="section-label">알림</div>
+          <div class="card">
+            <div class="row">
+              <div class="row-main"><div class="row-title">리마인더 알림</div></div>
+              <button class="switch on" aria-label="리마인더 알림"></button>
+            </div>
+            <div class="row">
+              <div class="row-main">
+                <div class="row-title">알림에 날씨 요약 포함</div>
+                <div class="row-sub">비 소식이면 우산 알림</div>
+              </div>
+              <button class="switch on" aria-label="알림에 날씨 요약 포함"></button>
+            </div>
+          </div>
+
+          <!-- 화면 -->
+          <div class="section-label">화면</div>
+          <div class="card">
+            <div class="row" style="flex-direction: column; align-items: stretch; gap: var(--sp-3);">
+              <div class="row-title">테마</div>
+              <div class="segment theme3">
+                <button class="on">시스템</button>
+                <button>라이트</button>
+                <button>다크</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="row-main"><div class="row-title">언어</div></div>
+              <div class="row-meta">한국어 <i class="ph ph-caret-right ctx"></i></div>
+            </div>
+          </div>
+
+          <!-- 개인정보 -->
+          <div class="section-label">개인정보</div>
+          <div class="card">
+            <div class="row">
+              <div class="row-main">
+                <div class="row-title">공유 별칭 관리</div>
+                <div class="row-sub">공유 카드에는 실명 대신 별칭만</div>
+              </div>
+              <i class="ph ph-caret-right ctx"></i>
+            </div>
+            <div class="row">
+              <div class="row-main"><div class="row-title">내 데이터 내보내기</div></div>
+              <i class="ph ph-caret-right ctx"></i>
+            </div>
+          </div>
+
+          <!-- 정보 -->
+          <div class="section-label">정보</div>
+          <div class="card">
+            <div class="row" id="licenseRow">
+              <div class="row-main">
+                <div class="row-title">오픈소스 라이선스</div>
+                <div class="row-sub">Kiwi LGPLv3 고지</div>
+              </div>
+              <i class="ph ph-caret-right ctx"></i>
+            </div>
+            <div class="row">
+              <div class="row-main"><div class="row-title">버전</div></div>
+              <span class="meta-val">1.0.0 (2026.07)</span>
+            </div>
+          </div>
+
+          <div class="set-foot"></div>
+
+          <!-- 라이선스 시트 (스텝 3) -->
+          <div class="sheet-scrim" data-show="3">
+            <div class="sheet">
+              <div class="grabber"></div>
+              <div class="sheet-title">오픈소스 라이선스</div>
+              <p class="sheet-lead">새김은 아래 오픈소스의 도움으로 만들어졌어요.</p>
+              <div class="card">
+                <div class="row">
+                  <div class="row-main">
+                    <div class="row-title">Kiwi</div>
+                    <div class="row-sub">한국어 형태소 분석 · 규칙 기반 파싱 엔진</div>
+                  </div>
+                  <span class="badge neutral">LGPLv3</span>
+                </div>
+                <div class="row">
+                  <div class="row-main">
+                    <div class="row-title">Pretendard</div>
+                    <div class="row-sub">본문·제목 서체</div>
+                  </div>
+                  <span class="badge neutral">OFL-1.1</span>
+                </div>
+                <div class="row">
+                  <div class="row-main">
+                    <div class="row-title">Phosphor Icons</div>
+                    <div class="row-sub">인터페이스 아이콘</div>
+                  </div>
+                  <span class="badge neutral">MIT</span>
+                </div>
+              </div>
+              <p class="license-note">
+                <i class="ph ph-info"></i>
+                <span>Kiwi는 LGPLv3에 따라 사용되며, 라이브러리 변경 시 소스 공개 의무를 준수합니다. 각 항목을 탭하면 라이선스 전문을 볼 수 있어요.</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">설정</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <h2>설정 · 스마트 기능 제어</h2>
+    <p class="lead">온디바이스 FM(Apple Intelligence) 레이어는 옵션입니다. 기본은 꺼짐이고, 켜도 처리는 기기 안에서 끝납니다. 꺼져 있거나 미지원 기기에서도 앱은 규칙 기반으로 온전히 동작합니다.</p>
+    <div class="step-controls">
+      <button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button>
+      <button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button>
+    </div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-shield-check"></i><span>보강은 opt-in, 기본 OFF입니다. 켜도 서버로 전송하지 않고 기기 안에서만 처리합니다(프라이버시 원칙 P5 유지).</span></div>
+      <div class="pt"><i class="ph ph-check-circle"></i><span>보강 OFF, 심지어 미지원 기기에서도 투두·스케줄·루틴 파싱과 분류는 규칙 기반으로 100% 동작합니다. FM은 어디까지나 보조입니다.</span></div>
+      <div class="pt"><i class="ph ph-list-checks"></i><span>설정은 7개 그룹으로 절제(10개 이하 가드레일 준수). 스위치는 스마트 기능과 알림에만 두어 설정 비대화를 막았습니다.</span></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+  window.STEPS = [
+    { title: "기본 상태 (보강 OFF)", note: "마스터 토글 꺼짐 · 하위 3행 비활성." },
+    { title: "보강 켜기", note: "하위 3행 활성화 · '기기 안 처리' 강조." },
+    { title: "미지원 기기", note: "마스터 잠김 · 규칙 기반은 그대로 동작." },
+    { title: "오픈소스 라이선스", note: "Kiwi LGPLv3 고지 시트 미리보기." }
+  ];
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>
