@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim 디자인 프로토타입 · 워크플로우 리뷰 허브</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .hub { max-width: 1080px; margin: 0 auto; padding: var(--sp-10) var(--sp-6) var(--sp-12); }
+  .hub-head { max-width: 65ch; margin-bottom: var(--sp-8); }
+  .hub-head h1 { font: var(--text-display); letter-spacing: -0.02em; margin-bottom: var(--sp-3); }
+  .hub-head p { color: var(--fg-muted); }
+  .hub-head .badge { margin-right: var(--sp-1); }
+
+  .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); margin-bottom: var(--sp-10); }
+  @media (max-width: 900px) { .flow-grid { grid-template-columns: 1fr; } }
+  .flow-card {
+    display: flex; flex-direction: column; gap: var(--sp-2);
+    padding: var(--sp-5);
+    background: var(--shell-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    text-decoration: none; color: var(--fg);
+  }
+  .flow-card:hover { border-color: var(--accent); }
+  .flow-card .ph { font-size: 24px; color: var(--accent); }
+  .flow-card h3 { font: var(--text-body); font-weight: 600; }
+  .flow-card p { font: var(--text-sm); color: var(--fg-muted); }
+  .flow-card .num { font: var(--text-xs); color: var(--fg-faint); letter-spacing: var(--tracking-label); }
+
+  .palette h2 { font: var(--text-title); margin-bottom: var(--sp-4); }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-6); }
+  .swatch {
+    height: 72px; border-radius: var(--radius-input);
+    border: 1px solid var(--border);
+    display: flex; align-items: flex-end;
+    padding: var(--sp-2) var(--sp-3);
+    font: var(--text-xs); letter-spacing: 0; text-transform: none;
+  }
+  .type-scale { display: flex; flex-direction: column; gap: var(--sp-3); margin-bottom: var(--sp-6); max-width: 65ch; }
+  .btn-states { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
+  .btn-states .cta { width: auto; padding: var(--sp-3) var(--sp-6); }
+</style>
+</head>
+<body>
+
+<header class="shell-header">
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim 프로토타입</div>
+  <div class="crumb">워크플로우 리뷰 허브</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+
+<main class="hub">
+  <div class="hub-head">
+    <h1>하위 페이지 동작 워크플로우, 화면으로 확인하세요</h1>
+    <p>각 카드는 실제 앱 플로우 하나를 단계별로 재생하는 목업입니다. 우측 상단 토글로 다크/라이트를 전환하며 리뷰할 수 있고, 선택은 페이지 간 유지됩니다. 좌우 방향키로도 단계를 넘길 수 있습니다.</p>
+    <p style="margin-top: var(--sp-3);">
+      <span class="badge">액센트 1개: 엔티티 핑크</span>
+      <span class="badge neutral">radius: 카드 16 / 입력 10 / 버튼 pill</span>
+      <span class="badge neutral">폰트: Pretendard</span>
+    </p>
+  </div>
+
+  <div class="flow-grid">
+    <a class="flow-card" href="01-onboarding.html">
+      <i class="ph ph-hand-waving"></i>
+      <span class="num">01</span>
+      <h3>온보딩 · 가입 워크플로우</h3>
+      <p>시작 → 로그인(Apple/Google/이메일) → 약관 스크롤 동의 → 권한 설명 카드 → 홈 진입. 상태머신 단계 재생.</p>
+    </a>
+    <a class="flow-card" href="02-home-week.html">
+      <i class="ph ph-calendar-dots"></i>
+      <span class="num">02</span>
+      <h3>홈 · Week 뷰</h3>
+      <p>주간 스트립 + 습관 링 + TODAY/THIS WEEK 통합 타임라인. 투두와 이벤트가 한 화면에 공존하는 구조.</p>
+    </a>
+    <a class="flow-card" href="03-compose.html">
+      <i class="ph ph-magic-wand"></i>
+      <span class="num">03</span>
+      <h3>컴포즈 · 실시간 파싱 (핵심)</h3>
+      <p>"내일 오후 8시에 민지랑 성수 카페에서 저녁" 타이핑 중 날짜/시간/연락처/장소 토큰이 하이라이트되고 Event로 자동 전환.</p>
+    </a>
+    <a class="flow-card" href="04-event-detail.html">
+      <i class="ph ph-map-pin"></i>
+      <span class="num">04</span>
+      <h3>이벤트 상세 시트</h3>
+      <p>제출 직후 바텀시트: 제목/시간/서브투두/지도 스니펫/날씨. 하위 투두 추가 동작 포함.</p>
+    </a>
+    <a class="flow-card" href="05-complete.html">
+      <i class="ph ph-check-circle"></i>
+      <span class="num">05</span>
+      <h3>완료 시트 · "새김"</h3>
+      <p>체크 → 완료 시트에서 사진 첨부 + 한 줄 메모. 완료가 기록이 되는 보상 순간의 워크플로우.</p>
+    </a>
+    <a class="flow-card" href="06-share-card.html">
+      <i class="ph ph-share-network"></i>
+      <span class="num">06</span>
+      <h3>공유 카드 · 웹 뷰</h3>
+      <p>공유 링크 발급 → OG 카드 썸네일 → /s/{id} 웹 페이지. shareAlias만 노출되는 프라이버시 정책 확인.</p>
+    </a>
+  </div>
+
+  <section class="palette">
+    <h2>토큰 팔레트 (일관성 기준점)</h2>
+    <div class="swatches">
+      <div class="swatch" style="background: var(--bg); color: var(--fg);">bg</div>
+      <div class="swatch" style="background: var(--bg-elevated); color: var(--fg);">bg-elevated</div>
+      <div class="swatch" style="background: var(--bg-inset); color: var(--fg);">bg-inset</div>
+      <div class="swatch" style="background: var(--accent); color: var(--accent-fg);">accent</div>
+      <div class="swatch" style="background: var(--accent-soft); color: var(--accent);">accent-soft</div>
+      <div class="swatch" style="background: var(--success); color: var(--bg-elevated);">success</div>
+      <div class="swatch" style="background: var(--fg); color: var(--bg);">fg</div>
+      <div class="swatch" style="background: var(--fg-muted); color: var(--bg);">fg-muted</div>
+    </div>
+    <div class="type-scale">
+      <div style="font: var(--text-display);">디스플레이 28 · WEEK 29</div>
+      <div style="font: var(--text-title);">타이틀 21 · 민지와 저녁</div>
+      <div style="font: var(--text-body-lg);">본문 L 17 · 컴포즈 입력 텍스트, <span class="tk">내일</span> 토큰 하이라이트 포함</div>
+      <div style="font: var(--text-body);">본문 15 · 리스트 아이템 제목</div>
+      <div style="font: var(--text-sm); color: var(--fg-muted);">보조 13 · 시간, 주소, 메타 정보</div>
+      <div class="section-label" style="padding: 0;">섹션 라벨 11 · TODAY</div>
+    </div>
+    <div class="btn-states">
+      <button class="cta">기본 CTA</button>
+      <button class="cta secondary">보조 CTA</button>
+      <button class="cta" disabled>비활성</button>
+      <button class="icon-btn"><i class="ph ph-microphone"></i></button>
+      <button class="icon-btn accent"><i class="ph ph-arrow-up"></i></button>
+      <span class="badge"><i class="ph-fill ph-cloud-rain"></i> 강수 60%</span>
+      <span class="badge ok"><i class="ph ph-check"></i> 동기화됨</span>
+    </div>
+  </section>
+</main>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 홈 Week 뷰</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  /* 페이지 전용 스타일 (값은 전부 var() 토큰 참조) */
+  .day.sel { box-shadow: inset 0 0 0 2px var(--accent); color: var(--fg); }
+  .day.sel .num { color: var(--accent); }
+  .compose-pill.tapped {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+    color: var(--fg);
+  }
+  .compose-pill.tapped .ph { color: var(--accent); }
+  .habit-name { margin-top: var(--sp-1); }
+  /* data-show 가시 요소의 자연 display 복원 (base.css [data-show]{none} 대비 특이도 상향) */
+  .screen .row[data-show] { display: flex; }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">02 · 홈 Week 뷰</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+
+<main class="shell-main">
+  <div class="stage">
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+
+          <div class="navbar">
+            <div>
+              <div class="title">WEEK 29</div>
+              <div class="sub">7월 13일 - 19일</div>
+            </div>
+            <div class="spacer"></div>
+            <button class="icon-btn"><i class="ph ph-calendar-blank"></i></button>
+          </div>
+
+          <div class="week-strip">
+            <div class="day" data-day="mon"><span>월</span><span class="num">13</span><span class="dot"></span></div>
+            <div class="day" data-day="tue"><span>화</span><span class="num">14</span><span class="dot"></span></div>
+            <div class="day today" data-day="wed"><span>수</span><span class="num">15</span><span class="dot"></span></div>
+            <div class="day has-events" data-day="thu"><span>목</span><span class="num">16</span><span class="dot"></span></div>
+            <div class="day has-events" data-day="fri"><span>금</span><span class="num">17</span><span class="dot"></span></div>
+            <div class="day" data-day="sat"><span>토</span><span class="num">18</span><span class="dot"></span></div>
+            <div class="day" data-day="sun"><span>일</span><span class="num">19</span><span class="dot"></span></div>
+          </div>
+
+          <div class="section-label">Habits</div>
+          <div class="rings">
+            <div class="ring">
+              <svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p1" r="23" cx="26" cy="26" stroke-dasharray="98 144.5"></circle></svg>
+              <span class="habit-name">달리기</span>
+            </div>
+            <div class="ring">
+              <svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p2" r="23" cx="26" cy="26" stroke-dasharray="65 144.5"></circle></svg>
+              <span class="habit-name">피아노</span>
+            </div>
+            <div class="ring">
+              <svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p3" r="23" cx="26" cy="26" stroke-dasharray="118 144.5"></circle></svg>
+              <span class="habit-name">웨이트</span>
+            </div>
+          </div>
+
+          <div class="section-label">Today</div>
+          <div class="card">
+            <div class="row">
+              <i class="ph ph-phone ctx"></i>
+              <div class="row-main">
+                <div class="row-title">김민지님께 전화</div>
+                <div class="row-sub">지난주 부재중 답신</div>
+              </div>
+              <div class="row-meta"><i class="ph ph-caret-right"></i></div>
+            </div>
+
+            <div class="row" data-show="0,2,3">
+              <span class="checkbox"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">우산 챙기기</div>
+                <div class="row-sub">비 소식, 우산 챙기세요</div>
+              </div>
+              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
+            </div>
+            <div class="row done" data-show="1">
+              <span class="checkbox checked"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">우산 챙기기</div>
+                <div class="row-sub">비 소식, 우산 챙기세요</div>
+              </div>
+              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
+            </div>
+
+            <div class="row">
+              <span class="checkbox"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">장보기 - 저녁 재료</div>
+                <div class="row-sub">두부, 대파, 달걀</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <span class="checkbox event"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">팀 위클리</div>
+                <div class="row-sub">온라인 · 주간 회고</div>
+              </div>
+              <div class="row-meta">10:00 <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i></span></div>
+            </div>
+          </div>
+
+          <div class="section-label">This Week</div>
+          <div class="card">
+            <div class="row">
+              <span class="checkbox event"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">피아노 레슨</div>
+                <div class="row-sub">성수동 · 목요일</div>
+              </div>
+              <div class="row-meta">13:00</div>
+            </div>
+            <div class="row">
+              <span class="checkbox event"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">성수 브릭 베이커리 픽업</div>
+                <div class="row-sub">연무장길 24-8 · 금요일</div>
+              </div>
+              <div class="row-meta">18:00</div>
+            </div>
+            <div class="row">
+              <span class="checkbox"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">주말 등산 준비</div>
+                <div class="row-sub">민지 언니와 청계산</div>
+              </div>
+              <div class="row-meta">토</div>
+            </div>
+          </div>
+
+          <div class="compose-pill" id="composePill">
+            <i class="ph ph-plus-circle"></i>
+            <span class="hint">무엇이든 적으면 일정이 돼요</span>
+            <i class="ph ph-microphone"></i>
+          </div>
+
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">홈 · Week</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <h2>홈 Week 뷰</h2>
+    <p class="lead">한 주를 한 화면에 - 습관 링, 오늘 할 일, 이번 주 일정, 그리고 어디서든 적기 시작하는 입력 pill.</p>
+    <div class="step-controls">
+      <button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button>
+      <button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button>
+    </div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-eye"></i><span>습관 링 3개는 서로 다른 진행률을 하나의 액센트 계열로 표현 - 색 남용 없이 구분.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>투두 체크 시 완료선과 성공 색으로 즉시 피드백.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>이벤트는 사각 체크, 투두는 원형 체크로 종류를 구분.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>입력 pill은 03 컴포즈 화면으로 진입하는 유일한 관문.</span></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+  window.STEPS = [
+    { title: "주간 개요", note: "습관 링, 오늘, 이번 주가 한 화면에." },
+    { title: "투두 체크", note: "우산 챙기기 완료 - 완료선과 성공 색." },
+    { title: "요일 이동", note: "목요일을 탭해 다른 날을 선택." },
+    { title: "적기 시작", note: "입력 pill 강조 - 03 컴포즈로 진입." }
+  ];
+  document.addEventListener("stepchange", (e) => {
+    const s = e.detail.step;
+    const thu = document.querySelector('[data-day="thu"]');
+    if (thu) thu.classList.toggle("sel", s === 2);
+    const pill = document.getElementById("composePill");
+    if (pill) pill.classList.toggle("tapped", s === 3);
+  });
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>

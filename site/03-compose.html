@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 컴포즈</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  /* 페이지 전용 스타일 (값은 전부 var() 토큰 참조) */
+  .compose-screen { display: flex; flex-direction: column; min-height: 100%; }
+  .compose-top {
+    display: flex; align-items: center; gap: var(--sp-3);
+    padding: var(--sp-2) var(--sp-4);
+  }
+  .compose-top .segment { margin-left: auto; width: auto; }
+  .compose-top .segment button { min-width: 64px; }
+  .compose-body { flex: 1; display: flex; flex-direction: column; }
+  .ph-text { color: var(--fg-faint); }
+  .compose-toolbar .tool {
+    width: 34px; height: 34px; flex: none;
+    display: grid; place-items: center;
+    border-radius: var(--radius-pill);
+    background: var(--bg-inset); color: var(--fg-muted);
+    border: none; cursor: pointer; font-size: 17px;
+  }
+  .submit-btn.ready { box-shadow: var(--shadow-md); transform: scale(1.08); }
+  /* data-show 가시 요소의 자연 display 복원 (base.css [data-show]{none} 대비 특이도 상향) */
+  .compose-input[data-show] { display: block; }
+  .compose-top .segment[data-show] { display: grid; }
+  .compose-body .suggest[data-show] { display: flex; }
+  .compose-toolbar .tool[data-show] { display: grid; }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">03 · 컴포즈</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+
+<main class="shell-main">
+  <div class="stage">
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+          <div class="compose-screen">
+
+            <div class="compose-top">
+              <button class="icon-btn"><i class="ph ph-x"></i></button>
+              <div class="segment" data-show="0,1"><button class="on">할 일</button><button>이벤트</button></div>
+              <div class="segment" data-show="2,3,4,5,6"><button>할 일</button><button class="on">이벤트</button></div>
+            </div>
+
+            <div class="compose-body">
+              <div class="compose-input" data-show="0"><span class="ph-text">오늘 뭐 할까요?</span><span class="caret"></span></div>
+              <div class="compose-input" data-show="1"><span class="tk">내일</span><span class="caret"></span></div>
+              <div class="compose-input" data-show="2"><span class="tk">내일</span> <span class="tk">오후 8시</span><span class="caret"></span></div>
+              <div class="compose-input" data-show="3"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 민지<span class="caret"></span></div>
+              <div class="compose-input" data-show="4"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑<span class="caret"></span></div>
+              <div class="compose-input" data-show="5"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑 성수 카<span class="caret"></span></div>
+              <div class="compose-input" data-show="6"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk">민지</span>랑 <span class="tk">성수 카페</span>에서 저녁<span class="caret"></span></div>
+
+              <div class="suggest" data-show="1">
+                <div class="suggest-title">내일 · 기존 일정</div>
+                <div class="card">
+                  <div class="row">
+                    <span class="checkbox event"><i class="ph ph-check"></i></span>
+                    <div class="row-main"><div class="row-title">팀 위클리</div><div class="row-sub">온라인 · 주간 회고</div></div>
+                    <div class="row-meta">10:00</div>
+                  </div>
+                  <div class="row">
+                    <span class="checkbox event"><i class="ph ph-check"></i></span>
+                    <div class="row-main"><div class="row-title">피아노 레슨</div><div class="row-sub">성수동</div></div>
+                    <div class="row-meta">13:00</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="suggest" data-show="3">
+                <div class="suggest-title">연락처</div>
+                <div class="candidate">
+                  <div class="avatar">민</div>
+                  <div class="c-main"><div class="c-name">김민지</div><div class="c-sub">자주 연락</div></div>
+                  <i class="ph ph-plus"></i>
+                </div>
+                <div class="candidate">
+                  <div class="avatar">민</div>
+                  <div class="c-main"><div class="c-name">민지 언니</div><div class="c-sub">가족</div></div>
+                  <i class="ph ph-plus"></i>
+                </div>
+              </div>
+
+              <div class="suggest" data-show="5">
+                <div class="suggest-title">장소</div>
+                <div class="candidate">
+                  <div class="avatar square"><i class="ph ph-map-pin"></i></div>
+                  <div class="c-main"><div class="c-name">성수 브릭 베이커리</div><div class="c-sub">서울 성동구 연무장길 24-8</div></div>
+                </div>
+                <div class="candidate">
+                  <div class="avatar square"><i class="ph ph-map-pin"></i></div>
+                  <div class="c-main"><div class="c-name">카페 온화 성수점</div><div class="c-sub">서울 성동구 왕십리로 96</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="compose-toolbar">
+              <button class="tool"><i class="ph ph-calendar-blank"></i></button>
+              <button class="tool" data-show="2,3,4,5,6"><i class="ph ph-clock"></i></button>
+              <button class="tool"><i class="ph ph-map-pin"></i></button>
+              <button class="tool"><i class="ph ph-at"></i></button>
+              <div class="spacer"></div>
+              <button class="submit-btn" id="submitBtn"><i class="ph ph-arrow-up"></i></button>
+            </div>
+
+            <div class="predict">
+              <span>내일</span>
+              <span>오후</span>
+              <span>민지랑</span>
+            </div>
+            <div class="keyboard">
+              <div class="krow">
+                <span class="key">ㅂ</span><span class="key">ㅈ</span><span class="key">ㄷ</span><span class="key">ㄱ</span><span class="key">ㅅ</span><span class="key">ㅛ</span><span class="key">ㅕ</span><span class="key">ㅐ</span>
+              </div>
+              <div class="krow">
+                <span class="key">ㅁ</span><span class="key">ㄴ</span><span class="key">ㅇ</span><span class="key">ㄹ</span><span class="key">ㅎ</span><span class="key">ㅗ</span><span class="key">ㅓ</span><span class="key">ㅏ</span>
+              </div>
+              <div class="krow">
+                <span class="key"><i class="ph ph-arrow-fat-up"></i></span><span class="key">ㅋ</span><span class="key">ㅌ</span><span class="key">ㅊ</span><span class="key">ㅍ</span><span class="key">ㅜ</span><span class="key">ㅡ</span><span class="key"><i class="ph ph-backspace"></i></span>
+              </div>
+              <div class="krow">
+                <span class="key">123</span><span class="key wide">space</span><span class="key">완료</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">컴포즈 · 문장에서 일정으로</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <h2>컴포즈 - 문장이 일정이 되는 순간</h2>
+    <p class="lead">한 문장을 그대로 적으면 날짜, 시간, 사람, 장소가 토큰으로 잡히고 구조화 필드로 확정됩니다.</p>
+    <div class="step-controls">
+      <button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button>
+      <button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button>
+    </div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-lock-key"></i><span>토큰 확정 = 구조화 필드 lock. 하이라이트된 토큰은 날짜/시간/사람/장소 필드로 고정됩니다.</span></div>
+      <div class="pt"><i class="ph ph-calendar-check"></i><span>기존 일정과 연계 (요구사항 5). 날짜 인식 즉시 그 날의 기존 일정을 함께 보여줍니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>시간을 인식하면 세그먼트가 할 일에서 이벤트로 자동 전환됩니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>사람/장소 후보는 하나의 액센트 계열로만 표시 - 색 남용 없음.</span></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+  window.STEPS = [
+    { title: "빈 입력", note: "커서만 깜빡이는 시작. 세그먼트는 할 일." },
+    { title: "날짜 인식", note: "내일이 토큰으로 - 그 날 기존 일정 프리뷰." },
+    { title: "시간 인식", note: "오후 8시 토큰 + 이벤트로 자동 전환." },
+    { title: "사람 후보", note: "민지랑 - 연락처 후보 2건 제시." },
+    { title: "사람 확정", note: "민지를 선택해 토큰으로 삽입." },
+    { title: "장소 후보", note: "성수 카 - 장소 후보 2건 제시." },
+    { title: "문장 완성", note: "토큰 4개 확정, 저장 버튼 강조." }
+  ];
+  document.addEventListener("stepchange", (e) => {
+    const btn = document.getElementById("submitBtn");
+    if (btn) btn.classList.toggle("ready", e.detail.step === 6);
+  });
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 완료</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .complete-head { text-align: center; margin-bottom: var(--sp-4); }
+  .complete-head .ch-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .complete-head .ch-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 2px; }
+
+  .check-stage { display: grid; place-items: center; padding: var(--sp-2) 0 var(--sp-5); }
+  .check-stage .mark { font-size: 72px; color: var(--success); }
+  body[data-step="1"] .check-stage .mark { animation: pop 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { body[data-step="1"] .check-stage .mark { animation: none; } }
+
+  .memo {
+    background: var(--bg-inset);
+    border-radius: var(--radius-input);
+    padding: var(--sp-3) var(--sp-4);
+    min-height: 76px;
+    margin-top: var(--sp-3);
+    font: var(--text-body);
+  }
+  .memo.placeholder { color: var(--fg-faint); }
+  .memo.filled { color: var(--fg); }
+
+  .complete-label {
+    font: var(--text-xs); letter-spacing: var(--tracking-label);
+    text-transform: uppercase; color: var(--fg-muted);
+    margin: var(--sp-2) var(--sp-1);
+  }
+
+  /* 스텝 0: 체크 탭 유도 */
+  .tap-target { position: relative; }
+  body[data-step="0"] .tap-target::after {
+    content: ""; position: absolute; inset: -6px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--accent);
+    animation: pulse 1.4s ease-out infinite;
+  }
+  @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(1.4); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { body[data-step="0"] .tap-target::after { animation: none; opacity: 0.6; } }
+
+  body[data-step="3"] .home-done { animation: settle 0.35s ease; }
+  @keyframes settle { from { background: var(--success-soft); } to { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) { body[data-step="3"] .home-done { animation: none; } }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">05 · 완료 · 새김</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+<main class="shell-main">
+  <div class="stage">
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+
+          <!-- 홈 (시트 뒤 배경) -->
+          <div class="navbar">
+            <div>
+              <div class="title">오늘</div>
+              <div class="sub">7월 16일 (목)</div>
+            </div>
+            <div class="spacer"></div>
+            <button class="icon-btn"><i class="ph ph-magnifying-glass"></i></button>
+          </div>
+
+          <div class="section-label">저녁</div>
+          <div class="card">
+            <!-- 미완료 상태 (스텝 0,1,2) -->
+            <div class="row" data-show="0,1,2">
+              <span class="checkbox event tap-target"></span>
+              <div class="row-main">
+                <div class="row-title">민지와 저녁</div>
+                <div class="row-sub">20:00 · 성수 브릭 베이커리</div>
+              </div>
+              <i class="ph ph-map-pin ctx"></i>
+            </div>
+            <!-- 완료(새김) 상태 (스텝 3) -->
+            <div class="row done home-done" data-show="3">
+              <span class="checkbox event checked"><i class="ph ph-check"></i></span>
+              <div class="row-main">
+                <div class="row-title">민지와 저녁</div>
+                <div class="row-sub">20:00 · 성수 브릭 베이커리</div>
+              </div>
+              <span class="badge ok"><i class="ph ph-seal-check"></i> 새김 완료</span>
+            </div>
+          </div>
+
+          <!-- 완료 시트 (스텝 1,2) -->
+          <div class="sheet-scrim" data-show="1,2">
+            <div class="sheet">
+              <div class="grabber"></div>
+              <div class="complete-head">
+                <div class="ch-title">오늘을 새기기</div>
+                <div class="ch-sub">민지와 저녁 · 방금 완료</div>
+              </div>
+
+              <div class="check-stage">
+                <i class="ph-fill ph-check-circle mark"></i>
+              </div>
+
+              <div class="complete-label">사진</div>
+              <div class="photo-grid">
+                <img data-show="2" src="https://picsum.photos/seed/cafe-evening/300/300" alt="성수 저녁 사진">
+                <button class="add-photo"><i class="ph ph-plus"></i></button>
+              </div>
+
+              <div class="complete-label">메모</div>
+              <div class="memo placeholder" data-show="1">오늘은 어땠나요?</div>
+              <div class="memo filled" data-show="2">오랜만에 언니랑. 빵이 맛있었다</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">완료 시트 · 새김</div>
+    </div>
+  </div>
+  <aside class="notes">
+    <h2>완료 시트 · "새김"</h2>
+    <p class="lead">체크로 끝나지 않고, 사진 한 장과 한 줄 메모로 오늘을 남기는 보상의 순간.</p>
+    <div class="step-controls"><button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button><button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button></div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-eye"></i><span>체크 탭이 곧장 사라지지 않고 완료 시트로 이어져, 마무리가 하나의 의식처럼 느껴집니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>사진 1장과 한 줄 메모만 요구해 부담이 없습니다. 이 재료가 그대로 공유 카드의 원재료가 됩니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>저장 후 홈에서 '새김 완료' 배지로 오늘의 성취가 남습니다.</span></div>
+    </div>
+  </aside>
+</main>
+<script>
+window.STEPS = [
+  { title: "체크 탭", note: "홈에서 민지와 저녁 완료 탭" },
+  { title: "완료 시트 등장", note: "오늘을 새기기 · 사진/메모" },
+  { title: "사진 + 메모 입력", note: "성수 저녁 한 장, 한 줄 기록" },
+  { title: "저장", note: "홈에 새김 완료 배지로 남음" }
+];
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>

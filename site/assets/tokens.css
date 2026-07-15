@@ -1,0 +1,95 @@
+/* ============================================================
+   Saegim 프로토타입 단일 토큰 소스 (tokens.css)
+   규칙: 색/폰트/크기/간격/radius/그림자는 이 파일에만 정의한다.
+   다른 CSS/HTML에서 raw hex, raw 색상값 사용 금지 (var() 참조만).
+   radius 시스템(고정): 카드·시트 16px / 입력 10px / 버튼·pill 999px
+   액센트는 1개(entity pink), 전 화면 공통.
+   ============================================================ */
+
+:root {
+  /* ---- 색: 라이트 ---- */
+  --bg: hsl(220 20% 97%);              /* 앱 배경 */
+  --bg-elevated: hsl(0 0% 100%);       /* 카드/시트/네비바 */
+  --bg-inset: hsl(220 14% 93%);        /* 입력창/웰/키보드 키 배경 */
+  --bg-scrim: hsl(222 25% 10% / 0.4);  /* 바텀시트 뒤 딤 */
+
+  --fg: hsl(222 20% 13%);              /* 본문 */
+  --fg-muted: hsl(222 10% 42%);        /* 보조 텍스트 */
+  --fg-faint: hsl(222 8% 62%);         /* 플레이스홀더/비활성 */
+
+  --border: hsl(220 12% 88%);
+  --border-strong: hsl(220 10% 78%);
+
+  /* 액센트: 엔티티 핑크 (영상 레퍼런스 하이라이트) */
+  --accent: hsl(340 64% 50%);
+  --accent-strong: hsl(340 70% 42%);
+  --accent-fg: hsl(0 0% 100%);         /* 액센트 위 텍스트 */
+  --accent-soft: hsl(340 60% 50% / 0.12);  /* 토큰 하이라이트 배경 */
+  --accent-ring-2: hsl(340 45% 62%);   /* 습관 링 보조 1 (액센트 파생) */
+  --accent-ring-3: hsl(340 30% 74%);   /* 습관 링 보조 2 (액센트 파생) */
+
+  --success: hsl(152 45% 40%);         /* 완료 체크 */
+  --success-soft: hsl(152 45% 40% / 0.12);
+
+  /* 그림자: 배경 색조로 틴트, 순수 검정 금지 */
+  --shadow-sm: 0 1px 2px hsl(222 25% 20% / 0.06);
+  --shadow-md: 0 4px 16px hsl(222 25% 20% / 0.10);
+  --shadow-lg: 0 12px 40px hsl(222 25% 20% / 0.18);
+
+  /* ---- 타이포 ---- */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+  --text-display: 600 28px/34px var(--font-sans);   /* 큰 제목 (WEEK 29) */
+  --text-title: 600 21px/26px var(--font-sans);     /* 시트 제목 */
+  --text-body-lg: 400 17px/24px var(--font-sans);   /* 컴포즈 입력 */
+  --text-body: 400 15px/21px var(--font-sans);      /* 리스트 본문 */
+  --text-sm: 400 13px/18px var(--font-sans);        /* 보조 */
+  --text-xs: 500 11px/14px var(--font-sans);        /* 섹션 라벨 (uppercase) */
+  --tracking-label: 0.08em;
+
+  /* ---- 간격 (4px 배수만) ---- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px;  --sp-10: 40px; --sp-12: 48px;
+
+  /* ---- radius (고정 시스템) ---- */
+  --radius-card: 16px;
+  --radius-input: 10px;
+  --radius-chip: 6px;   /* 토큰 하이라이트/이벤트 체크/키캡 */
+  --radius-pill: 999px;
+  --radius-device: 52px;   /* iPhone 하드웨어 베젤 전용 */
+
+  /* ---- 리뷰 셸(프로토타입 문서 자체) ---- */
+  --shell-bg: hsl(220 18% 94%);
+  --shell-fg: var(--fg);
+  --shell-panel: var(--bg-elevated);
+}
+
+[data-theme="dark"] {
+  --bg: hsl(222 18% 9%);
+  --bg-elevated: hsl(222 15% 13%);
+  --bg-inset: hsl(222 13% 18%);
+  --bg-scrim: hsl(222 30% 4% / 0.55);
+
+  --fg: hsl(220 15% 94%);
+  --fg-muted: hsl(220 8% 64%);
+  --fg-faint: hsl(220 6% 46%);
+
+  --border: hsl(222 10% 22%);
+  --border-strong: hsl(222 8% 32%);
+
+  --accent: hsl(340 70% 64%);
+  --accent-strong: hsl(340 75% 70%);
+  --accent-fg: hsl(222 18% 9%);
+  --accent-soft: hsl(340 70% 64% / 0.16);
+  --accent-ring-2: hsl(340 50% 52%);
+  --accent-ring-3: hsl(340 30% 38%);
+
+  --success: hsl(152 42% 52%);
+  --success-soft: hsl(152 42% 52% / 0.14);
+
+  --shadow-sm: 0 1px 2px hsl(222 40% 3% / 0.4);
+  --shadow-md: 0 4px 16px hsl(222 40% 3% / 0.5);
+  --shadow-lg: 0 12px 40px hsl(222 40% 3% / 0.6);
+
+  --shell-bg: hsl(222 20% 7%);
+  --shell-panel: var(--bg-elevated);
+}

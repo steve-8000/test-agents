@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 이벤트 상세</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .sheet-head { display: flex; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+  .sheet-head .sh-main { flex: 1; min-width: 0; }
+  .sheet-head .sh-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .sheet-head .sh-sub { font: var(--text-sm); font-weight: 600; color: var(--accent); margin-top: 2px; }
+
+  .weather-line { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-4); }
+
+  .add-todo {
+    display: flex; align-items: center; gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--fg-muted); font: var(--text-body);
+    cursor: pointer;
+  }
+  .add-todo .ph { font-size: 18px; }
+
+  .map-caption {
+    display: flex; align-items: center; gap: var(--sp-2);
+    margin-top: var(--sp-2);
+    font: var(--text-sm); color: var(--fg-muted);
+  }
+  .map-caption .ph { color: var(--accent); font-size: 16px; }
+
+  .sheet-section-label {
+    font: var(--text-xs); letter-spacing: var(--tracking-label);
+    text-transform: uppercase; color: var(--fg-muted);
+    margin: var(--sp-2) var(--sp-1);
+  }
+  .sheet .card { margin: 0 0 var(--sp-4); }
+  .map-snippet { margin-top: var(--sp-1); }
+
+  /* 스텝 2: 스크림 없이 홈에 반영된 이벤트 강조 */
+  body[data-step="2"] .home-event { animation: settle 0.3s ease; }
+  @keyframes settle { from { background: var(--accent-soft); } to { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) { body[data-step="2"] .home-event { animation: none; } }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">04 · 이벤트 상세</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+<main class="shell-main">
+  <div class="stage">
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+
+          <!-- 홈: Week 뷰 (시트 뒤 배경) -->
+          <div class="navbar">
+            <div>
+              <div class="title">WEEK 29</div>
+              <div class="sub">7월 13일 - 19일</div>
+            </div>
+            <div class="spacer"></div>
+            <button class="icon-btn"><i class="ph ph-magnifying-glass"></i></button>
+          </div>
+          <div class="week-strip">
+            <div class="day"><span>월</span><span class="num">13</span><span class="dot"></span></div>
+            <div class="day"><span>화</span><span class="num">14</span><span class="dot"></span></div>
+            <div class="day today"><span>수</span><span class="num">15</span><span class="dot"></span></div>
+            <div class="day has-events"><span>목</span><span class="num">16</span><span class="dot"></span></div>
+            <div class="day"><span>금</span><span class="num">17</span><span class="dot"></span></div>
+            <div class="day"><span>토</span><span class="num">18</span><span class="dot"></span></div>
+            <div class="day"><span>일</span><span class="num">19</span><span class="dot"></span></div>
+          </div>
+
+          <div class="section-label">내일 · 7월 16일 (목)</div>
+          <div class="card">
+            <div class="row">
+              <span class="checkbox event"></span>
+              <div class="row-main">
+                <div class="row-title">팀 위클리</div>
+                <div class="row-sub">10:00</div>
+              </div>
+              <i class="ph ph-users ctx"></i>
+            </div>
+            <div class="row">
+              <span class="checkbox event"></span>
+              <div class="row-main">
+                <div class="row-title">피아노 레슨</div>
+                <div class="row-sub">13:00 · 성수동</div>
+              </div>
+              <i class="ph ph-music-note ctx"></i>
+            </div>
+            <div class="row home-event" data-show="2">
+              <span class="checkbox event"></span>
+              <div class="row-main">
+                <div class="row-title">민지와 저녁</div>
+                <div class="row-sub">20:00 · 성수 브릭 베이커리</div>
+              </div>
+              <i class="ph ph-map-pin ctx"></i>
+            </div>
+          </div>
+
+          <!-- 바텀시트 (스텝 0,1) -->
+          <div class="sheet-scrim" data-show="0,1">
+            <div class="sheet">
+              <div class="grabber"></div>
+              <div class="sheet-head">
+                <div class="sh-main">
+                  <div class="sh-title">민지와 저녁</div>
+                  <div class="sh-sub">내일, 20:00 - 20:30</div>
+                </div>
+                <button class="icon-btn"><i class="ph ph-dots-three"></i></button>
+              </div>
+
+              <div class="weather-line">
+                <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 26&deg;C · 강수 60%</span>
+                <span class="badge"><i class="ph ph-umbrella"></i> 우산 챙기세요</span>
+              </div>
+
+              <div class="sheet-section-label">TODOS</div>
+              <div class="card">
+                <div class="row">
+                  <span class="checkbox"></span>
+                  <div class="row-main">
+                    <div class="row-title">예약 전화하기</div>
+                  </div>
+                </div>
+                <div class="row" data-show="1">
+                  <span class="checkbox"></span>
+                  <div class="row-main">
+                    <div class="row-title">케이크 예약 확인하기</div>
+                  </div>
+                </div>
+                <div class="add-todo">
+                  <i class="ph ph-plus"></i>
+                  <span>하위 투두 추가</span>
+                </div>
+              </div>
+
+              <div class="map-snippet" style="background-image: url('https://tile.openstreetmap.org/15/27942/12691.png');">
+                <i class="ph-fill ph-map-pin pin"></i>
+              </div>
+              <div class="map-caption">
+                <i class="ph ph-map-pin"></i>
+                <span>성수 브릭 베이커리 · 연무장길 24-8</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">이벤트 상세 시트</div>
+    </div>
+  </div>
+  <aside class="notes">
+    <h2>이벤트 상세 시트</h2>
+    <p class="lead">컴포즈 제출 직후 뜨는 바텀시트에서 하위 투두를 붙이고, 닫으면 홈에 이벤트로 반영됩니다.</p>
+    <div class="step-controls"><button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button><button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button></div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-eye"></i><span>시트 등장 즉시 시간과 장소, 날씨가 한눈에. 서브가 액센트 색이라 '내일 저녁'이라는 맥락이 먼저 읽힙니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>날씨는 정보에 그치지 않고 '우산 챙기세요' 배지로 행동을 제안합니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>시트를 닫으면 스크림이 사라지고 같은 이벤트가 홈 타임라인 제자리에 안착합니다.</span></div>
+    </div>
+  </aside>
+</main>
+<script>
+window.STEPS = [
+  { title: "시트 등장", note: "제출 직후 바텀시트가 올라옴" },
+  { title: "하위 투두 추가", note: "케이크 예약 확인하기 추가됨" },
+  { title: "시트 닫기", note: "홈 타임라인에 이벤트 반영" }
+];
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>

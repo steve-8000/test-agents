@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saegim · 공유 카드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  /* 앱 내 공유 시트 */
+  .share-head { text-align: center; margin-bottom: var(--sp-4); }
+  .share-head .sh-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .share-head .sh-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 2px; }
+
+  .alias-note {
+    display: flex; align-items: flex-start; gap: var(--sp-2);
+    background: var(--accent-soft);
+    border-radius: var(--radius-input);
+    padding: var(--sp-3) var(--sp-4);
+    margin: var(--sp-4) 0;
+    font: var(--text-sm); color: var(--accent-strong);
+  }
+  .alias-note .ph { flex: none; font-size: 17px; color: var(--accent); margin-top: 1px; }
+  .alias-note b { font-weight: 700; }
+
+  .share-preview {
+    display: flex; align-items: center; gap: var(--sp-3);
+    padding: var(--sp-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    margin-bottom: var(--sp-4);
+  }
+  .share-preview img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius-input); flex: none; }
+  .share-preview .sp-main { flex: 1; min-width: 0; }
+  .share-preview .sp-title { font: var(--text-body); font-weight: 600; }
+  .share-preview .sp-sub { font: var(--text-sm); color: var(--fg-muted); }
+
+  /* 웹 브라우저 목업 프레임 */
+  .web-frame {
+    width: 420px; max-width: 100%;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .browser-bar {
+    display: flex; align-items: center; gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--bg-inset);
+    border-bottom: 1px solid var(--border);
+  }
+  .browser-bar .dots { display: flex; gap: var(--sp-1); }
+  .browser-bar .dots span { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--border-strong); }
+  .browser-bar .url {
+    flex: 1; min-width: 0;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-pill);
+    padding: var(--sp-1) var(--sp-3);
+    font: var(--text-sm); color: var(--fg-muted);
+    display: flex; align-items: center; gap: var(--sp-2);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .browser-bar .url .ph { font-size: 14px; }
+  .browser-body { padding: var(--sp-5); min-height: 380px; }
+
+  /* OG 카드 (1200x630) */
+  .og-card {
+    aspect-ratio: 1200 / 630;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--accent);
+    color: var(--accent-fg);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .og-photo { flex: 1; position: relative; overflow: hidden; }
+  .og-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .og-body {
+    padding: var(--sp-4) var(--sp-5) var(--sp-5);
+    display: flex; flex-direction: column; gap: var(--sp-1);
+  }
+  .og-wordmark {
+    display: inline-flex; align-items: center; gap: var(--sp-1);
+    font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase;
+    opacity: 0.85; margin-bottom: var(--sp-1);
+  }
+  .og-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .og-meta { font: var(--text-sm); opacity: 0.9; }
+
+  .web-caption { font: var(--text-sm); color: var(--fg-muted); margin-top: var(--sp-3); text-align: center; }
+
+  /* /s/ 웹 페이지 */
+  .page-lead { text-align: center; margin-bottom: var(--sp-4); }
+  .page-lead h2 { font: var(--text-title); letter-spacing: -0.01em; }
+  .page-lead p { font: var(--text-sm); color: var(--fg-muted); margin-top: var(--sp-1); }
+  .page-cta { margin-top: var(--sp-5); }
+  .page-cta .sub { text-align: center; font: var(--text-sm); color: var(--fg-muted); margin-top: var(--sp-3); }
+
+  .frame-label {
+    text-align: center; margin-top: var(--sp-3);
+    font: var(--text-xs); letter-spacing: var(--tracking-label);
+    text-transform: uppercase; color: var(--fg-muted);
+  }
+</style>
+</head>
+<body>
+<header class="shell-header">
+  <a href="index.html" class="icon-btn" style="text-decoration:none;"><i class="ph ph-arrow-left"></i></a>
+  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim</div>
+  <div class="crumb">06 · 공유 카드</div>
+  <div class="spacer"></div>
+  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+</header>
+<main class="shell-main">
+  <div class="stage">
+
+    <!-- 디바이스: 앱 내 공유 시트 -->
+    <div>
+      <div class="device">
+        <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+        <div class="screen">
+          <div class="navbar">
+            <div>
+              <div class="title">공유</div>
+              <div class="sub">민지와 저녁</div>
+            </div>
+            <div class="spacer"></div>
+            <button class="icon-btn"><i class="ph ph-x"></i></button>
+          </div>
+
+          <div style="padding: 0 var(--sp-3);">
+            <div class="share-preview">
+              <img src="https://picsum.photos/seed/cafe-evening/160/160" alt="완료 사진">
+              <div class="sp-main">
+                <div class="sp-title">언니와 저녁</div>
+                <div class="sp-sub">7월 16일 저녁 · 성수 브릭 베이커리</div>
+              </div>
+              <span class="badge ok"><i class="ph ph-seal-check"></i> 새김</span>
+            </div>
+
+            <div class="alias-note">
+              <i class="ph ph-shield-check"></i>
+              <span>상대 이름은 별칭 <b>'언니'</b>로 표시돼요. 실명은 공유 링크에 포함되지 않습니다.</span>
+            </div>
+
+            <button class="cta"><i class="ph ph-link"></i> 링크 만들기</button>
+          </div>
+        </div>
+        <div class="homebar"></div>
+      </div>
+      <div class="device-label">앱 내 공유 시트</div>
+    </div>
+
+    <!-- 웹 브라우저 목업 -->
+    <div>
+      <div class="web-frame">
+        <div class="browser-bar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url" data-show="0"><i class="ph ph-circle-notch"></i> 링크 생성 대기 중</div>
+          <div class="url" data-show="1"><i class="ph ph-image"></i> 공유 미리보기 · og:image 1200&times;630</div>
+          <div class="url" data-show="2"><i class="ph ph-lock-simple"></i> saegim.app/s/a7f3</div>
+        </div>
+
+        <!-- 스텝 0: 대기 -->
+        <div class="browser-body" data-show="0">
+          <div class="page-lead" style="padding-top: var(--sp-10);">
+            <h2>링크를 만들면</h2>
+            <p>여기에 공유 카드 미리보기가 나타납니다.</p>
+          </div>
+        </div>
+
+        <!-- 스텝 1: OG 카드 미리보기 -->
+        <div class="browser-body" data-show="1">
+          <div class="og-card">
+            <div class="og-photo"><img src="https://picsum.photos/seed/cafe-evening/1200/630" alt="성수 저녁"></div>
+            <div class="og-body">
+              <span class="og-wordmark"><i class="ph ph-pencil-line"></i> Saegim</span>
+              <div class="og-title">언니와 저녁</div>
+              <div class="og-meta">7월 16일 저녁 · 성수 브릭 베이커리</div>
+            </div>
+          </div>
+          <div class="web-caption">메신저와 SNS에서 이렇게 펼쳐집니다.</div>
+        </div>
+
+        <!-- 스텝 2: /s/{id} 웹 페이지 -->
+        <div class="browser-body" data-show="2">
+          <div class="og-card">
+            <div class="og-photo"><img src="https://picsum.photos/seed/cafe-evening/1200/630" alt="성수 저녁"></div>
+            <div class="og-body">
+              <span class="og-wordmark"><i class="ph ph-pencil-line"></i> Saegim</span>
+              <div class="og-title">언니와 저녁</div>
+              <div class="og-meta">7월 16일 저녁 · 성수 브릭 베이커리</div>
+            </div>
+          </div>
+          <div class="page-cta">
+            <button class="cta"><i class="ph ph-pencil-line"></i> 나도 새기기</button>
+            <div class="sub">지우 님이 새긴 하루예요. 나의 하루도 남겨보세요.</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label">웹 카드 / 공유 페이지</div>
+    </div>
+
+  </div>
+  <aside class="notes">
+    <h2>공유 카드 · 웹 뷰</h2>
+    <p class="lead">앱에서 링크를 만들면 OG 카드가 생성되고, 링크를 연 사람에게는 가입 유도 페이지가 열립니다.</p>
+    <div class="step-controls"><button class="btn" data-step-prev><i class="ph ph-caret-left"></i> 이전</button><button class="btn primary" data-step-next>다음 단계 <i class="ph ph-caret-right"></i></button></div>
+    <ol class="step-list"></ol>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-eye"></i><span>공유 시트에서 별칭 정책을 먼저 안내합니다. 상대의 실명 '김민지'는 카드/페이지 어디에도 나오지 않고 별칭 '언니'만 노출됩니다.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>OG 카드는 완료 시트에서 남긴 사진과 제목을 그대로 재료로 씁니다. 완료가 곧 공유의 원천.</span></div>
+      <div class="pt"><i class="ph ph-eye"></i><span>링크를 연 비회원에게는 동일한 비주얼 아래 '나도 새기기' 가입 CTA로 자연스럽게 이어집니다.</span></div>
+    </div>
+  </aside>
+</main>
+<script>
+window.STEPS = [
+  { title: "앱 내 공유 시트", note: "링크 만들기 · 별칭 안내" },
+  { title: "OG 카드 미리보기", note: "1200x630 · 별칭만 노출" },
+  { title: "/s/ 웹 페이지", note: "동일 비주얼 + 나도 새기기" }
+];
+</script>
+<script src="assets/app.js"></script>
+</body>
+</html>
