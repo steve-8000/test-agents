@@ -250,7 +250,8 @@ body {
 .day .dot { width: 4px; height: 4px; border-radius: var(--radius-pill); background: var(--accent); opacity: 0; }
 .day.has-events .dot { opacity: 1; }
 .day.today { background: var(--accent); color: var(--accent-fg); }
-.day.today .num, .day.today .dot { color: var(--accent-fg); background: var(--accent-fg); }
+.day.today .num { color: var(--accent-fg); }
+.day.today .dot { color: var(--accent-fg); background: var(--accent-fg); }
 
 /* 습관 링 */
 .rings { display: flex; gap: var(--sp-3); padding: var(--sp-1) var(--sp-4) var(--sp-3); }
