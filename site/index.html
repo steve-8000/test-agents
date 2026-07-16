@@ -1,153 +1,689 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-accent="rose">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27><circle cx=%278%27 cy=%278%27 r=%277%27 fill=%27hsl(340,64%25,50%25)%27/></svg>">
-<title>Saegim 디자인 프로토타입 · 워크플로우 리뷰 허브</title>
+<title>Saegim · 원페이지 앱 프로토타입</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
 <style>
-  .hub { max-width: 1080px; margin: 0 auto; padding: var(--sp-10) var(--sp-6) var(--sp-12); }
-  .hub-head { max-width: 65ch; margin-bottom: var(--sp-8); }
-  .hub-head h1 { font: var(--text-display); letter-spacing: -0.02em; margin-bottom: var(--sp-3); }
-  .hub-head p { color: var(--fg-muted); }
-  .hub-head .badge { margin-right: var(--sp-1); }
-
-  .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); margin-bottom: var(--sp-10); }
-  @media (max-width: 900px) { .flow-grid { grid-template-columns: 1fr; } }
-  .flow-card {
-    display: flex; flex-direction: column; gap: var(--sp-2);
-    padding: var(--sp-5);
-    background: var(--shell-panel);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-card);
-    text-decoration: none; color: var(--fg);
+  /* ---- 셸 레이아웃 (문서 자체) ---- */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: var(--sp-8);
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: var(--sp-8) var(--sp-6) var(--sp-12);
+    align-items: start;
   }
-  .flow-card:hover { border-color: var(--accent); }
-  .flow-card .ph { font-size: 24px; color: var(--accent); }
-  .flow-card h3 { font: var(--text-body); font-weight: 600; }
-  .flow-card p { font: var(--text-sm); color: var(--fg-muted); }
-  .flow-card .num { font: var(--text-xs); color: var(--fg-faint); letter-spacing: var(--tracking-label); }
+  @media (max-width: 900px) { .app-shell { grid-template-columns: 1fr; } }
+  .app-stage { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); }
 
-  .palette h2 { font: var(--text-title); margin-bottom: var(--sp-4); }
-  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-6); }
-  .swatch {
-    height: 72px; border-radius: var(--radius-input);
-    border: 1px solid var(--border);
-    display: flex; align-items: flex-end;
+  .shell-header .accent-picker { margin-left: var(--sp-2); }
+
+  .notes .lead { color: var(--fg-muted); font: var(--text-sm); }
+  .jump { display: flex; flex-direction: column; gap: var(--sp-1); }
+  .jump button {
+    display: flex; align-items: center; gap: var(--sp-3);
     padding: var(--sp-2) var(--sp-3);
-    font: var(--text-xs); letter-spacing: 0; text-transform: none;
+    border: 1px solid var(--border); border-radius: var(--radius-input);
+    background: var(--bg-inset); color: var(--fg);
+    font: var(--text-sm); font-weight: 600; cursor: pointer; text-align: left;
   }
-  .type-scale { display: flex; flex-direction: column; gap: var(--sp-3); margin-bottom: var(--sp-6); max-width: 65ch; }
-  .btn-states { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
-  .btn-states .cta { width: auto; padding: var(--sp-3) var(--sp-6); }
+  .jump button:hover { border-color: var(--accent); }
+  .jump button .ph { color: var(--accent); font-size: 18px; }
+
+  /* ---- 온보딩 ---- */
+  .ob { padding: var(--sp-6) var(--sp-6) var(--sp-8); gap: var(--sp-6); }
+  .ob-step { display: none; }
+  .ob-step.active { display: flex; flex-direction: column; min-height: 100%; }
+  .ob-hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: var(--sp-3); }
+  .ob-logo { width: 96px; height: 96px; display: grid; place-items: center; border-radius: var(--radius-card); background: var(--accent-soft); color: var(--accent); font-size: 52px; }
+  .ob-brand { font: var(--text-display); letter-spacing: -0.02em; margin-top: var(--sp-2); }
+  .ob-tagline { font: var(--text-body-lg); color: var(--fg-muted); }
+  .ob-demo { width: 100%; margin-top: var(--sp-2); background: var(--bg-inset); border-radius: var(--radius-card); padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); text-align: left; }
+  .ob-demo .dl { font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-muted); }
+  .ob-demo .sent { font: var(--text-body); color: var(--fg); word-break: keep-all; }
+  .ob-head { display: flex; flex-direction: column; gap: var(--sp-2); }
+  .ob-head h1 { font: var(--text-title); letter-spacing: -0.01em; }
+  .ob-head p { font: var(--text-sm); color: var(--fg-muted); }
+  .ob-body { flex: 1; display: flex; flex-direction: column; gap: var(--sp-3); }
+  .ob-actions { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .terms { flex: 1; background: var(--bg-inset); border-radius: var(--radius-card); padding: var(--sp-4); overflow-y: auto; display: flex; flex-direction: column; gap: var(--sp-3); font: var(--text-sm); color: var(--fg-muted); scrollbar-width: none; }
+  .terms::-webkit-scrollbar { display: none; }
+  .terms h4 { font: var(--text-sm); font-weight: 700; color: var(--fg); }
+  .agree-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-1); }
+  .agree-row .check-box { flex: none; width: 22px; height: 22px; border-radius: var(--radius-chip); display: grid; place-items: center; color: var(--accent-fg); font-size: 13px; background: var(--accent); }
+  .agree-row .label { font: var(--text-body); color: var(--fg); }
+  .agree-row .label .req { color: var(--accent); }
+  .perm-icon { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--radius-input); background: var(--accent-soft); color: var(--accent); font-size: 20px; }
+
+  /* ---- 홈 ---- */
+  .home-nav .datelabel { font: var(--text-sm); color: var(--fg-muted); margin-bottom: 2px; }
+  .home-nav .title { line-height: 30px; }
+  .tl-item .tl-title { font: var(--text-body); font-weight: 600; color: var(--fg); }
+  .tl-item .tl-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 2px; word-break: keep-all; }
+  .tl-item.muted .tl-title { color: var(--fg-muted); font-weight: 500; }
+  .tl-card { cursor: pointer; }
+  .tl-card .tl-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); margin-top: var(--sp-2); }
+  .tl-card .detail-hint { font: var(--text-sm); color: var(--accent); display: inline-flex; align-items: center; gap: var(--sp-1); }
+  .routine-row { -webkit-mask-image: linear-gradient(to right, hsl(0 0% 0%) 86%, transparent); mask-image: linear-gradient(to right, hsl(0 0% 0%) 86%, transparent); }
+  .todo-check { cursor: pointer; }
+
+  /* ---- 컴포즈 시트 ---- */
+  .cmp-top { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+  .cmp-top .segment.three { width: auto; margin-left: auto; }
+  .cmp-top .segment.three button { min-width: 56px; }
+  .cmp-input { font: var(--text-body-lg); color: var(--fg); padding: var(--sp-2) var(--sp-1) var(--sp-4); word-break: keep-all; line-height: 28px; }
+  .cmp-input .caret { display: inline-block; width: 2px; height: 20px; background: var(--accent); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
+  .cmp-label { font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-muted); margin: var(--sp-3) var(--sp-1) var(--sp-2); }
+  .cmp-cands { display: flex; flex-direction: column; gap: var(--sp-2); }
+
+  /* ---- 이벤트 상세 시트 ---- */
+  .sheet-head { display: flex; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+  .sheet-head .sh-main { flex: 1; min-width: 0; }
+  .sheet-head .sh-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .sheet-head .sh-sub { font: var(--text-sm); font-weight: 600; color: var(--accent); margin-top: 2px; }
+  .weather-line { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-4); }
+  .add-todo { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); color: var(--fg-muted); font: var(--text-body); cursor: pointer; }
+  .add-todo .ph { font-size: 18px; }
+  .map-caption { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-2); font: var(--text-sm); color: var(--fg-muted); }
+  .map-caption .ph { color: var(--accent); font-size: 16px; }
+  .sheet-section-label { font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-muted); margin: var(--sp-2) var(--sp-1); }
+  .sheet .card { margin: 0 0 var(--sp-4); }
+  #sheet-event .map-snippet { margin-top: var(--sp-1); }
+
+  /* ---- 완료 시트 ---- */
+  .complete-head { text-align: center; margin-bottom: var(--sp-4); }
+  .complete-head .ch-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .complete-head .ch-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 2px; }
+  .check-stage { display: grid; place-items: center; padding: var(--sp-2) 0 var(--sp-5); }
+  .check-stage .mark { font-size: 72px; color: var(--success); }
+  .complete-label { font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-muted); margin: var(--sp-2) var(--sp-1); }
+  .memo-field { width: 100%; resize: none; background: var(--bg-inset); border: none; border-radius: var(--radius-input); padding: var(--sp-3) var(--sp-4); min-height: 76px; margin-top: var(--sp-1); font: var(--text-body); color: var(--fg); }
+  .memo-field::placeholder { color: var(--fg-faint); }
+  .memo-field:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  #sheet-complete .cta { margin-top: var(--sp-5); }
+
+  /* ---- 스토리 ---- */
+  .story { margin: var(--sp-3) var(--sp-4); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-card); box-shadow: var(--shadow-sm); overflow: hidden; }
+  .story.muted { opacity: 0.82; }
+  .story-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-4) var(--sp-4) var(--sp-2); }
+  .story-date { font: var(--text-title); color: var(--fg); }
+  .story-dow { color: var(--fg-muted); font-weight: 500; }
+  .story-head .icon-btn { flex: none; }
+  .story-auto { display: flex; align-items: center; gap: var(--sp-1); padding: 0 var(--sp-4) var(--sp-2); font: var(--text-xs); letter-spacing: 0; text-transform: none; color: var(--fg-muted); }
+  .story-auto .ph { color: var(--accent); font-size: 14px; }
+  .story-summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); padding: 0 var(--sp-4) var(--sp-3); }
+  .story .timeline { padding: var(--sp-1) var(--sp-4) var(--sp-2); }
+  .story .tl-card { background: transparent; border: none; box-shadow: none; padding: 0; cursor: default; }
+  .story .tl-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+  .story .tl-title { font: var(--text-body); font-weight: 600; color: var(--fg); }
+  .story .tl-badges { display: flex; align-items: center; gap: var(--sp-2); flex: none; }
+  .moment-check { color: var(--success); font-size: 16px; flex: none; }
+  .story .tl-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 1px; word-break: keep-all; }
+  .tl-thumb { margin-top: var(--sp-3); width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-input); display: block; }
+  .tl-thumb.sm { aspect-ratio: 3 / 1; }
+  [data-theme="dark"] .tl-thumb { filter: brightness(0.85) contrast(1.05); }
+  .tl-quote { margin-top: var(--sp-2); padding-left: var(--sp-3); border-left: 2px solid var(--border-strong); font: var(--text-sm); color: var(--fg-muted); word-break: keep-all; }
+  .day-line { margin: 0 var(--sp-4) var(--sp-4); padding: var(--sp-3) var(--sp-4); background: var(--accent-soft); border-radius: var(--radius-input); }
+  .day-line .lbl { display: flex; align-items: center; gap: var(--sp-1); font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--accent); }
+  .day-line p { font: var(--text-body); color: var(--fg); margin-top: var(--sp-1); word-break: keep-all; }
+  .day-line-entry { display: flex; align-items: center; gap: var(--sp-2); margin: 0 var(--sp-4) var(--sp-4); padding: var(--sp-3) var(--sp-4); border: 1px dashed var(--border-strong); border-radius: var(--radius-pill); color: var(--fg-muted); font: var(--text-sm); cursor: pointer; background: transparent; width: calc(100% - 2 * var(--sp-4)); }
+  .day-line-entry .ph { color: var(--accent); font-size: 18px; }
+
+  /* ---- 공유 시트 ---- */
+  .share-head { text-align: center; margin-bottom: var(--sp-4); }
+  .share-head .sh-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .share-head .sh-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 2px; }
+  .og-card { aspect-ratio: 1200 / 630; border-radius: var(--radius-card); overflow: hidden; background: var(--accent); color: var(--accent-fg); display: flex; flex-direction: column; }
+  .og-photo { flex: 1; overflow: hidden; }
+  .og-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .og-body { padding: var(--sp-3) var(--sp-4) var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-1); }
+  .og-wordmark { display: inline-flex; align-items: center; gap: var(--sp-1); font: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; opacity: 0.9; }
+  .og-title { font: var(--text-title); letter-spacing: -0.01em; }
+  .og-meta { font: var(--text-sm); opacity: 0.9; }
+  .alias-note { display: flex; align-items: flex-start; gap: var(--sp-2); background: var(--accent-soft); border-radius: var(--radius-input); padding: var(--sp-3) var(--sp-4); margin: var(--sp-4) 0; font: var(--text-sm); color: var(--accent-strong); }
+  .alias-note .ph { flex: none; font-size: 17px; color: var(--accent); margin-top: 1px; }
+  .alias-note b { font-weight: 700; }
+
+  /* ---- 설정 ---- */
+  .set-nav { gap: var(--sp-2); }
+  .set-nav .title { font: var(--text-display); letter-spacing: -0.02em; }
+  .pf-avatar { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font: var(--text-title); }
+  .smart-master .row-sub { max-width: 34ch; }
+  .device-badge { margin-top: var(--sp-2); }
+  .smart-foot { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-3) var(--sp-4) 0; font: var(--text-xs); letter-spacing: 0; text-transform: none; color: var(--fg-muted); word-break: keep-all; }
+  .smart-foot .ph { flex: none; color: var(--success); font-size: 15px; }
+  .btn-inline { flex: none; padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-pill); border: 1px solid var(--border-strong); background: transparent; color: var(--accent); font: var(--text-sm); font-weight: 600; cursor: pointer; }
+  .btn-inline:hover { border-color: var(--accent); }
+  .segment.theme3 { grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .screen-block { padding: var(--sp-4) var(--sp-4) var(--sp-1); }
+  .screen-block .sb-label { font: var(--text-body); font-weight: 500; color: var(--fg); margin-bottom: var(--sp-2); }
+  .screen-block .sb-note { font: var(--text-sm); color: var(--fg-muted); margin: var(--sp-2) 0 0; }
+  .meta-val { flex: none; font: var(--text-sm); color: var(--fg-faint); }
+  .set-foot { height: var(--sp-8); }
+
+  /* ---- 라이선스 시트 ---- */
+  .sheet-title { font: var(--text-title); color: var(--fg); }
+  .sheet-lead { font: var(--text-sm); color: var(--fg-muted); margin: var(--sp-1) 0 var(--sp-4); word-break: keep-all; }
+  #sheet-license .card { margin: 0; }
+  .license-note { display: flex; gap: var(--sp-2); margin-top: var(--sp-4); font: var(--text-sm); color: var(--fg-muted); word-break: keep-all; }
+  .license-note .ph { flex: none; color: var(--accent); margin-top: 1px; }
 </style>
 </head>
 <body>
 
 <header class="shell-header">
   <div class="brand"><i class="ph ph-pencil-line"></i> Saegim 프로토타입</div>
-  <div class="crumb">워크플로우 리뷰 허브</div>
+  <div class="crumb">원페이지 앱</div>
   <div class="spacer"></div>
   <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
+  <div class="accent-picker" role="group" aria-label="액센트 색">
+    <button class="swatch-btn" data-pick="rose" data-accent="rose" title="로즈" aria-label="로즈"></button>
+    <button class="swatch-btn" data-pick="coral" data-accent="coral" title="코랄" aria-label="코랄"></button>
+    <button class="swatch-btn" data-pick="amber" data-accent="amber" title="앰버" aria-label="앰버"></button>
+    <button class="swatch-btn" data-pick="sage" data-accent="sage" title="세이지" aria-label="세이지"></button>
+    <button class="swatch-btn" data-pick="ocean" data-accent="ocean" title="오션" aria-label="오션"></button>
+  </div>
 </header>
 
-<main class="hub">
-  <div class="hub-head">
-    <h1>하위 페이지 동작 워크플로우, 화면으로 확인하세요</h1>
-    <p>각 카드는 실제 앱 플로우 하나를 단계별로 재생하는 목업입니다. 우측 상단 토글로 다크/라이트를 전환하며 리뷰할 수 있고, 선택은 페이지 간 유지됩니다. 좌우 방향키로도 단계를 넘길 수 있습니다.</p>
-    <p style="margin-top: var(--sp-3);">
-      <span class="badge">액센트 1개: 엔티티 핑크</span>
-      <span class="badge neutral">radius: 카드 16 / 입력 10 / 버튼 pill</span>
-      <span class="badge neutral">폰트: Pretendard</span>
-    </p>
-  </div>
+<main class="app-shell">
+  <aside class="notes">
+    <h2>원페이지 앱 리뷰</h2>
+    <p class="lead">8개 스텝 페이지를 하나의 폰 프레임 안에서 리로드 없이 동작하는 클릭형 앱으로 합쳤습니다. 아래 버튼은 리뷰 편의용 바로가기이고, 실제 이동은 폰 안에서 이어집니다.</p>
+    <div class="jump">
+      <button data-show-view="onboarding"><i class="ph ph-hand-waving"></i> 온보딩</button>
+      <button data-show-view="home"><i class="ph ph-house"></i> 홈</button>
+      <button data-show-view="story"><i class="ph ph-book-open"></i> 스토리</button>
+      <button data-show-view="settings"><i class="ph ph-gear-six"></i> 설정</button>
+    </div>
+    <div class="review-points">
+      <div class="pt"><i class="ph ph-arrows-left-right"></i><span>홈에서 스케줄 카드를 탭하면 상세 시트, 투두를 체크하면 완료 시트, 하단 pill은 컴포즈 시트로 이어집니다.</span></div>
+      <div class="pt"><i class="ph ph-palette"></i><span>상단·설정 화면의 액센트 픽커는 rose·coral·amber·sage·ocean 5종을 즉시 전환하고 새로고침 후에도 유지됩니다.</span></div>
+      <div class="pt"><i class="ph ph-highlighter"></i><span>컴포즈 입력에서 날짜·시간은 액센트, 사람은 파랑, 장소는 초록, 반복은 보라로 구분됩니다.</span></div>
+    </div>
+  </aside>
 
-  <div class="flow-grid">
-    <a class="flow-card" href="01-onboarding.html">
-      <i class="ph ph-hand-waving"></i>
-      <span class="num">01</span>
-      <h3>온보딩 · 가입 워크플로우</h3>
-      <p>시작 → 로그인(Apple/Google/이메일) → 약관 스크롤 동의 → 권한 설명 카드 → 홈 진입. 상태머신 단계 재생.</p>
-    </a>
-    <a class="flow-card" href="02-home-week.html">
-      <i class="ph ph-calendar-dots"></i>
-      <span class="num">02</span>
-      <h3>홈 · Week 뷰</h3>
-      <p>주간 스트립 + 루틴/스케줄/투두 3분류 홈. 오늘의 루틴 스트릭, 스케줄 타임라인, 투두 체크리스트가 한 화면에 정리되는 구조.</p>
-    </a>
-    <a class="flow-card" href="03-compose.html">
-      <i class="ph ph-magic-wand"></i>
-      <span class="num">03</span>
-      <h3>컴포즈 · 실시간 파싱 (핵심)</h3>
-      <p>빈 입력 패턴 제안 + 문장 타이핑 중 날짜/시간/사람/장소 토큰 하이라이트 + 카테고리 자동 분류 + 루틴 자동 전환.</p>
-    </a>
-    <a class="flow-card" href="04-event-detail.html">
-      <i class="ph ph-map-pin"></i>
-      <span class="num">04</span>
-      <h3>이벤트 상세 시트</h3>
-      <p>제출 직후 바텀시트: 제목/시간/서브투두/지도 스니펫/날씨. 하위 투두 추가 동작 포함.</p>
-    </a>
-    <a class="flow-card" href="05-complete.html">
-      <i class="ph ph-check-circle"></i>
-      <span class="num">05</span>
-      <h3>완료 시트 · "새김"</h3>
-      <p>체크 → 완료 시트에서 사진 첨부 + 한 줄 메모. 완료가 기록이 되는 보상 순간의 워크플로우.</p>
-    </a>
-    <a class="flow-card" href="06-share-card.html">
-      <i class="ph ph-share-network"></i>
-      <span class="num">06</span>
-      <h3>공유 카드 · 웹 뷰</h3>
-      <p>공유 링크 발급 → OG 카드 썸네일 → /s/{id} 웹 페이지. shareAlias만 노출되는 프라이버시 정책 확인.</p>
-    </a>
-    <a class="flow-card" href="07-timeline.html">
-      <i class="ph ph-book-open"></i>
-      <span class="num">07</span>
-      <h3>새김 스토리 · 하루가 기록이 되다</h3>
-      <p>완료·사진·날씨가 하루 스토리로 자동 조립되고, 내가 한 줄을 얹을 수 있다.</p>
-    </a>
-    <a class="flow-card" href="08-settings.html">
-      <i class="ph ph-gear-six"></i>
-      <span class="num">08</span>
-      <h3>설정 · 스마트 기능 제어</h3>
-      <p>Apple Intelligence 보강을 옵션으로 켜고 끄는 설정. 모든 처리는 기기 안에서.</p>
-    </a>
-  </div>
+  <div class="app-stage">
+    <div class="device app">
+      <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
+      <div class="screen">
 
-  <section class="palette">
-    <h2>토큰 팔레트 (일관성 기준점)</h2>
-    <div class="swatches">
-      <div class="swatch" style="background: var(--bg); color: var(--fg);">bg</div>
-      <div class="swatch" style="background: var(--bg-elevated); color: var(--fg);">bg-elevated</div>
-      <div class="swatch" style="background: var(--bg-inset); color: var(--fg);">bg-inset</div>
-      <div class="swatch" style="background: var(--accent); color: var(--accent-fg);">accent</div>
-      <div class="swatch" style="background: var(--accent-soft); color: var(--accent);">accent-soft</div>
-      <div class="swatch" style="background: var(--success); color: var(--bg-elevated);">success</div>
-      <div class="swatch" style="background: var(--fg); color: var(--bg);">fg</div>
-      <div class="swatch" style="background: var(--fg-muted); color: var(--bg);">fg-muted</div>
+        <!-- ============ 뷰: 온보딩 ============ -->
+        <section class="view active" id="view-onboarding">
+          <!-- 환영 -->
+          <div class="ob ob-step active">
+            <div class="ob-hero">
+              <div class="ob-logo"><i class="ph ph-pencil-line"></i></div>
+              <div class="ob-brand">Saegim</div>
+              <div class="ob-tagline">적으면, 새겨집니다</div>
+              <div class="ob-demo">
+                <span class="dl">한 문장이 일정이 됩니다</span>
+                <span class="sent"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk person">민지</span>랑 <span class="tk place">성수</span> 카페에서 저녁</span>
+                <span class="sent"><span class="tk recur">매주 화·목</span> <span class="tk">오후 7시</span> 필라테스</span>
+              </div>
+            </div>
+            <div class="ob-actions">
+              <button class="cta" data-ob-next>시작하기</button>
+            </div>
+          </div>
+
+          <!-- 약관 -->
+          <div class="ob ob-step">
+            <div class="ob-head">
+              <h1>약관에 동의해 주세요</h1>
+              <p>끝까지 읽으면 동의 버튼이 켜집니다.</p>
+            </div>
+            <div class="terms">
+              <h4>제1조 (목적)</h4>
+              <p>본 약관은 Saegim(이하 '회사')이 제공하는 기록 및 일정 관리 서비스의 이용 조건과 절차, 회사와 이용자의 권리와 의무를 정하는 것을 목적으로 합니다.</p>
+              <h4>제2조 (기록의 저장)</h4>
+              <p>이용자가 입력한 메모, 일정, 사진은 기기 내부에 우선 저장됩니다. 이용자가 백업을 켠 경우에 한해 암호화된 형태로 회사 서버에 동기화됩니다.</p>
+              <h4>제3조 (개인정보 처리)</h4>
+              <p>회사는 서비스 제공에 필요한 최소한의 정보만 수집하며, 연락처와 위치 정보는 자동완성과 장소 추천이 필요한 사용 시점에만 접근합니다. 수집 목적이 끝나면 지체 없이 파기합니다.</p>
+              <h4>제4조 (공유 링크)</h4>
+              <p>이용자가 만든 공유 카드에는 상대의 실명 대신 이용자가 지정한 별칭만 표시됩니다. 링크는 이용자가 언제든 만료시킬 수 있습니다.</p>
+              <h4>제5조 (권한)</h4>
+              <p>알림, 캘린더, 연락처, 위치 권한을 거부하더라도 기본적인 기록 기능은 로컬에서 그대로 사용할 수 있습니다.</p>
+            </div>
+            <div>
+              <div class="agree-row"><span class="check-box"><i class="ph ph-check"></i></span><span class="label"><span class="req">(필수)</span> 서비스 이용약관에 동의</span></div>
+              <div class="agree-row"><span class="check-box"><i class="ph ph-check"></i></span><span class="label"><span class="req">(필수)</span> 개인정보 처리방침에 동의</span></div>
+            </div>
+            <div class="ob-actions">
+              <button class="cta" data-ob-next>동의하고 계속</button>
+            </div>
+          </div>
+
+          <!-- 권한 -->
+          <div class="ob ob-step">
+            <div class="ob-head">
+              <h1>이럴 때 권한을 요청해요</h1>
+              <p>지금 켜지 않아도 괜찮아요. 필요한 순간에 물어봅니다.</p>
+            </div>
+            <div class="ob-body">
+              <div class="card">
+                <div class="row">
+                  <span class="perm-icon"><i class="ph ph-address-book"></i></span>
+                  <div class="row-main"><div class="row-title">연락처</div><div class="row-sub">입력 중 이름 자동완성</div></div>
+                  <span class="badge neutral">사용 시점에 요청</span>
+                </div>
+                <div class="row">
+                  <span class="perm-icon"><i class="ph ph-map-pin"></i></span>
+                  <div class="row-main"><div class="row-title">위치</div><div class="row-sub">장소 추천</div></div>
+                  <span class="badge neutral">사용 시점에 요청</span>
+                </div>
+                <div class="row">
+                  <span class="perm-icon"><i class="ph ph-bell"></i></span>
+                  <div class="row-main"><div class="row-title">알림</div><div class="row-sub">리마인더</div></div>
+                  <span class="badge neutral">사용 시점에 요청</span>
+                </div>
+              </div>
+            </div>
+            <div class="ob-actions">
+              <button class="cta" data-show-view="home">시작하기 <i class="ph ph-arrow-right"></i></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 뷰: 홈 ============ -->
+        <section class="view" id="view-home">
+          <div class="navbar home-nav">
+            <div>
+              <div class="datelabel">7월 16일 목요일</div>
+              <div class="title">오늘</div>
+            </div>
+            <div class="spacer"></div>
+            <button class="icon-btn" data-show-view="story" aria-label="스토리"><i class="ph ph-book-open"></i></button>
+            <button class="icon-btn" data-show-view="settings" aria-label="설정"><i class="ph ph-gear-six"></i></button>
+          </div>
+
+          <div class="week-strip">
+            <div class="day"><span>월</span><span class="num">13</span><span class="dot"></span></div>
+            <div class="day"><span>화</span><span class="num">14</span><span class="dot"></span></div>
+            <div class="day"><span>수</span><span class="num">15</span><span class="dot"></span></div>
+            <div class="day today"><span>목</span><span class="num">16</span><span class="dot"></span></div>
+            <div class="day has-events"><span>금</span><span class="num">17</span><span class="dot"></span></div>
+            <div class="day"><span>토</span><span class="num">18</span><span class="dot"></span></div>
+            <div class="day"><span>일</span><span class="num">19</span><span class="dot"></span></div>
+          </div>
+
+          <!-- 습관 -->
+          <div class="section-label">습관</div>
+          <div class="routine-row">
+            <div class="routine-chip done">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p1" r="23" cx="26" cy="26" stroke-dasharray="144.5 144.5"></circle></svg></span>
+              <div><div class="r-name">달리기</div><div class="r-streak">12일째</div></div>
+            </div>
+            <div class="routine-chip">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p2" r="23" cx="26" cy="26" stroke-dasharray="58 144.5"></circle></svg></span>
+              <div><div class="r-name">영어 단어</div><div class="r-streak">5일째</div></div>
+            </div>
+            <div class="routine-chip">
+              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p3" r="23" cx="26" cy="26" stroke-dasharray="8 144.5"></circle></svg></span>
+              <div><div class="r-name">필라테스</div><div class="r-streak">화·목 19:00 예정</div></div>
+            </div>
+          </div>
+
+          <!-- 이번 주 -->
+          <div class="section-label">이번 주</div>
+          <div class="timeline">
+            <div class="tl-item muted">
+              <div class="tl-time">10:00</div>
+              <div class="tl-card"><div class="tl-title">팀 위클리</div><div class="tl-sub">온라인 · 주간 회고 · 지남</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">20:00</div>
+              <div class="tl-card" data-open-sheet="event">
+                <div class="tl-title">민지와 저녁</div>
+                <div class="tl-sub">성수 브릭 베이커리</div>
+                <div class="tl-foot">
+                  <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 26° · 강수 60%</span>
+                  <span class="detail-hint">상세 <i class="ph ph-caret-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 오늘 -->
+          <div class="section-label">오늘</div>
+          <div class="card">
+            <div class="row">
+              <span class="checkbox todo-check" data-open-sheet="complete"><i class="ph ph-check"></i></span>
+              <div class="row-main"><div class="row-title">우산 챙기기</div><div class="row-sub">비 소식, 우산 챙기세요</div></div>
+              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
+            </div>
+            <div class="row" id="todoGrocery">
+              <span class="checkbox todo-check" data-open-sheet="complete"><i class="ph ph-check"></i></span>
+              <div class="row-main"><div class="row-title">장보기</div><div class="row-sub">저녁 재료 · 두부, 대파, 달걀</div></div>
+            </div>
+            <div class="row">
+              <span class="checkbox todo-check" data-open-sheet="complete"><i class="ph ph-check"></i></span>
+              <div class="row-main"><div class="row-title">김민지님께 전화</div><div class="row-sub">지난주 부재중 답신</div></div>
+              <div class="row-meta"><i class="ph ph-phone ctx"></i></div>
+            </div>
+          </div>
+
+          <div class="compose-pill" data-open-sheet="compose">
+            <i class="ph ph-plus-circle"></i>
+            <span class="hint">무엇이든 적으면 일정이 돼요</span>
+            <i class="ph ph-microphone"></i>
+          </div>
+        </section>
+
+        <!-- ============ 뷰: 스토리 ============ -->
+        <section class="view" id="view-story">
+          <div class="navbar">
+            <button class="icon-btn" data-show-view="home" aria-label="뒤로"><i class="ph ph-arrow-left"></i></button>
+            <div>
+              <div class="title">새김</div>
+              <div class="sub">하루가 기록이 됩니다</div>
+            </div>
+          </div>
+
+          <article class="story">
+            <div class="story-head">
+              <div><div class="story-date">7월 16일 <span class="story-dow">목요일</span></div></div>
+              <button class="icon-btn" data-open-sheet="share" aria-label="하루 카드 공유"><i class="ph ph-share-network"></i></button>
+            </div>
+            <div class="story-auto"><i class="ph ph-stack"></i> 완료·사진·날씨로 자동 조립됨</div>
+            <div class="story-summary">
+              <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 비 26°</span>
+              <span class="badge neutral">완료 3 · 사진 1</span>
+            </div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-time">07:30</div>
+                <div class="tl-card">
+                  <div class="tl-head"><div class="tl-title">우산 챙기기</div><div class="tl-badges"><span class="badge neutral">일상</span><i class="ph ph-check-circle moment-check"></i></div></div>
+                  <div class="tl-sub">비 예보로 아침에 자동 추천</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">08:00</div>
+                <div class="tl-card">
+                  <div class="tl-head"><div class="tl-title">필라테스</div><div class="tl-badges"><span class="badge neutral">운동</span><i class="ph ph-check-circle moment-check"></i></div></div>
+                  <div class="tl-sub">이번 주 3회째</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">20:00</div>
+                <div class="tl-card">
+                  <div class="tl-head"><div class="tl-title">민지와 저녁</div><div class="tl-badges"><span class="badge neutral">약속</span></div></div>
+                  <img class="tl-thumb" src="https://picsum.photos/seed/cafe-evening/480/270" alt="성수 저녁 사진">
+                  <div class="tl-quote">오랜만에 언니랑. 빵이 맛있었다</div>
+                </div>
+              </div>
+            </div>
+            <div class="day-line">
+              <div class="lbl"><i class="ph ph-quotes"></i> 내가 얹은 한 줄</div>
+              <p>비 오는 날은 역시 빵.</p>
+            </div>
+            <button class="day-line-entry"><i class="ph ph-plus-circle"></i> 오늘에 한 줄 더 남기기</button>
+          </article>
+
+          <article class="story muted">
+            <div class="story-head"><div><div class="story-date">7월 15일 <span class="story-dow">수요일</span></div></div></div>
+            <div class="story-summary"><span class="badge neutral">완료 2 · 루틴 1</span></div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-time">07:00</div>
+                <div class="tl-card"><div class="tl-head"><div class="tl-title">달리기 5km</div><div class="tl-badges"><span class="badge neutral">운동</span><i class="ph ph-check-circle moment-check"></i></div></div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">22:30</div>
+                <div class="tl-card"><div class="tl-head"><div class="tl-title">책 30쪽 읽기</div><div class="tl-badges"><span class="badge neutral">기록</span><i class="ph ph-check-circle moment-check"></i></div></div></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ============ 뷰: 설정 ============ -->
+        <section class="view" id="view-settings">
+          <div class="navbar set-nav">
+            <button class="icon-btn" data-show-view="home" aria-label="뒤로"><i class="ph ph-arrow-left"></i></button>
+            <div class="title">설정</div>
+          </div>
+
+          <!-- 프로필 -->
+          <div class="card">
+            <div class="row">
+              <span class="pf-avatar">지</span>
+              <div class="row-main"><div class="row-title">지우</div><div class="row-sub">Apple 계정 연결됨</div></div>
+              <i class="ph ph-caret-right ctx"></i>
+            </div>
+          </div>
+
+          <!-- 스마트 보강 -->
+          <div class="section-label">스마트 보강</div>
+          <div class="card" data-smart>
+            <div class="row smart-master">
+              <div class="row-main">
+                <div class="row-title">스마트 보강</div>
+                <div class="row-sub">모든 처리는 기기 안에서 끝납니다. 서버로 보내지 않아요.</div>
+                <span class="badge device-badge"><i class="ph-fill ph-shield-check"></i> 기기 안 처리</span>
+              </div>
+              <button class="switch" data-master aria-label="스마트 보강"></button>
+            </div>
+            <div class="sub-rows">
+              <div class="row"><div class="row-main"><div class="row-title">스토리 한 줄 제안</div></div><button class="switch" aria-label="스토리 한 줄 제안"></button></div>
+              <div class="row"><div class="row-main"><div class="row-title">애매한 문장 파싱 보조</div></div><button class="switch" aria-label="애매한 문장 파싱 보조"></button></div>
+              <div class="row"><div class="row-main"><div class="row-title">카테고리 분류 보조</div></div><button class="switch" aria-label="카테고리 분류 보조"></button></div>
+            </div>
+          </div>
+          <div class="smart-foot"><i class="ph ph-check-circle"></i><span>꺼져 있어도 투두·스케줄·루틴 파싱은 규칙 기반으로 그대로 동작해요.</span></div>
+
+          <!-- 연동 -->
+          <div class="section-label">연동</div>
+          <div class="card">
+            <div class="row"><div class="row-main"><div class="row-title">Apple 캘린더·리마인더</div></div><span class="badge ok"><i class="ph ph-check"></i> 연결됨</span></div>
+            <div class="row"><div class="row-main"><div class="row-title">Google 캘린더</div><div class="row-sub">연결 안 됨</div></div><button class="btn-inline">연결</button></div>
+          </div>
+
+          <!-- 알림 -->
+          <div class="section-label">알림</div>
+          <div class="card">
+            <div class="row"><div class="row-main"><div class="row-title">리마인더 알림</div></div><button class="switch on" aria-label="리마인더 알림"></button></div>
+            <div class="row"><div class="row-main"><div class="row-title">알림에 날씨 요약 포함</div><div class="row-sub">비 소식이면 우산 알림</div></div><button class="switch on" aria-label="알림에 날씨 요약 포함"></button></div>
+          </div>
+
+          <!-- 화면 -->
+          <div class="section-label">화면</div>
+          <div class="card">
+            <div class="screen-block" data-theme-seg>
+              <div class="sb-label">테마</div>
+              <div class="segment theme3">
+                <button data-mode="system">시스템</button>
+                <button data-mode="light">라이트</button>
+                <button data-mode="dark">다크</button>
+              </div>
+            </div>
+            <div class="screen-block">
+              <div class="sb-label">액센트</div>
+              <div class="accent-picker" role="group" aria-label="액센트 색">
+                <button class="swatch-btn" data-pick="rose" data-accent="rose" title="로즈" aria-label="로즈"></button>
+                <button class="swatch-btn" data-pick="coral" data-accent="coral" title="코랄" aria-label="코랄"></button>
+                <button class="swatch-btn" data-pick="amber" data-accent="amber" title="앰버" aria-label="앰버"></button>
+                <button class="swatch-btn" data-pick="sage" data-accent="sage" title="세이지" aria-label="세이지"></button>
+                <button class="swatch-btn" data-pick="ocean" data-accent="ocean" title="오션" aria-label="오션"></button>
+              </div>
+              <p class="sb-note">앱 전체 강조색을 바꿉니다. 선택은 이 기기에 저장됩니다.</p>
+            </div>
+            <div class="row"><div class="row-main"><div class="row-title">언어</div></div><div class="row-meta">한국어 <i class="ph ph-caret-right ctx"></i></div></div>
+          </div>
+
+          <!-- 개인정보 -->
+          <div class="section-label">개인정보</div>
+          <div class="card">
+            <div class="row"><div class="row-main"><div class="row-title">공유 별칭 관리</div><div class="row-sub">공유 카드에는 실명 대신 별칭만</div></div><i class="ph ph-caret-right ctx"></i></div>
+            <div class="row"><div class="row-main"><div class="row-title">내 데이터 내보내기</div></div><i class="ph ph-caret-right ctx"></i></div>
+          </div>
+
+          <!-- 정보 -->
+          <div class="section-label">정보</div>
+          <div class="card">
+            <div class="row" data-open-sheet="license">
+              <div class="row-main"><div class="row-title">오픈소스 라이선스</div><div class="row-sub">Kiwi LGPLv3 고지</div></div>
+              <i class="ph ph-caret-right ctx"></i>
+            </div>
+            <div class="row"><div class="row-main"><div class="row-title">버전</div></div><span class="meta-val">1.0.0 (2026.07)</span></div>
+          </div>
+          <div class="set-foot"></div>
+        </section>
+
+      </div>
+      <div class="homebar"></div>
+
+      <!-- ============ 시트: 컴포즈 ============ -->
+      <div class="sheet-scrim" id="sheet-compose">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="cmp-top">
+            <button class="icon-btn" data-close-sheet aria-label="닫기"><i class="ph ph-x"></i></button>
+            <div class="segment three"><button>투두</button><button class="on">스케줄</button><button>루틴</button></div>
+          </div>
+          <div class="cmp-input"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk person">민지</span>랑 <span class="tk place">성수</span> 카페에서 저녁<span class="caret"></span></div>
+
+          <div class="cmp-label">약속으로 분류됨</div>
+          <div class="candidate">
+            <div class="avatar square"><i class="ph ph-users-three"></i></div>
+            <div class="c-main"><div class="c-name">약속 <span class="badge">사람+장소</span></div><div class="c-sub">사람과 장소를 함께 인식했어요 · 탭해서 변경</div></div>
+            <i class="ph ph-caret-right"></i>
+          </div>
+
+          <div class="cmp-label">후보</div>
+          <div class="cmp-cands">
+            <div class="candidate">
+              <div class="avatar">민</div>
+              <div class="c-main"><div class="c-name">김민지</div><div class="c-sub">자주 연락 · 별칭 '언니'</div></div>
+              <i class="ph ph-check"></i>
+            </div>
+            <div class="candidate">
+              <div class="avatar square"><i class="ph ph-map-pin"></i></div>
+              <div class="c-main"><div class="c-name">성수 브릭 베이커리</div><div class="c-sub">서울 성동구 연무장길 24-8</div></div>
+              <i class="ph ph-check"></i>
+            </div>
+          </div>
+
+          <div class="cmp-label">내일 · 기존 일정</div>
+          <div class="card">
+            <div class="row">
+              <span class="checkbox event"></span>
+              <div class="row-main"><div class="row-title">팀 위클리</div><div class="row-sub">온라인 · 주간 회고</div></div>
+              <div class="row-meta">10:00</div>
+            </div>
+            <div class="row">
+              <span class="checkbox event"></span>
+              <div class="row-main"><div class="row-title">피아노 레슨</div><div class="row-sub">성수동</div></div>
+              <div class="row-meta">13:00</div>
+            </div>
+          </div>
+
+          <button class="cta" data-show-view="home" style="margin-top: var(--sp-5);"><i class="ph ph-plus"></i> 추가하기</button>
+        </div>
+      </div>
+
+      <!-- ============ 시트: 이벤트 상세 ============ -->
+      <div class="sheet-scrim" id="sheet-event">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="sheet-head">
+            <div class="sh-main">
+              <div class="sh-title">민지와 저녁</div>
+              <div class="sh-sub">내일, 20:00 - 20:30</div>
+            </div>
+            <button class="icon-btn" data-close-sheet aria-label="닫기"><i class="ph ph-x"></i></button>
+          </div>
+          <div class="weather-line">
+            <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 26&deg;C · 강수 60%</span>
+            <span class="badge"><i class="ph ph-umbrella"></i> 우산 챙기세요</span>
+          </div>
+          <div class="sheet-section-label">하위 투두</div>
+          <div class="card">
+            <div class="row"><span class="checkbox"></span><div class="row-main"><div class="row-title">예약 전화하기</div></div></div>
+            <div class="row"><span class="checkbox"></span><div class="row-main"><div class="row-title">케이크 예약 확인하기</div></div></div>
+            <div class="add-todo"><i class="ph ph-plus"></i><span>하위 투두 추가</span></div>
+          </div>
+          <div class="map-snippet" style="background-image: url('https://tile.openstreetmap.org/15/27942/12691.png');">
+            <i class="ph-fill ph-map-pin pin"></i>
+          </div>
+          <div class="map-caption"><i class="ph ph-map-pin"></i><span>성수 브릭 베이커리 · 연무장길 24-8</span></div>
+        </div>
+      </div>
+
+      <!-- ============ 시트: 완료(새김) ============ -->
+      <div class="sheet-scrim" id="sheet-complete">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="complete-head">
+            <div class="ch-title">오늘을 새기기</div>
+            <div class="ch-sub">장보기 · 방금 완료</div>
+          </div>
+          <div class="check-stage"><i class="ph-fill ph-check-circle mark"></i></div>
+          <div class="complete-label">사진</div>
+          <div class="photo-grid">
+            <img src="https://picsum.photos/seed/grocery-haul/300/300" alt="장본 재료 사진">
+            <button class="add-photo"><i class="ph ph-plus"></i></button>
+          </div>
+          <div class="complete-label">한 줄 메모</div>
+          <textarea class="memo-field" placeholder="오늘은 어땠나요?" rows="2">두부는 국산으로. 다음엔 달걀도 넉넉히</textarea>
+          <button class="cta" id="completeSave"><i class="ph ph-seal-check"></i> 완료 저장</button>
+        </div>
+      </div>
+
+      <!-- ============ 시트: 공유 ============ -->
+      <div class="sheet-scrim" id="sheet-share">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="share-head">
+            <div class="sh-title">하루 카드 공유</div>
+            <div class="sh-sub">7월 16일 · 완료 3</div>
+          </div>
+          <div class="og-card">
+            <div class="og-photo"><img src="https://picsum.photos/seed/cafe-evening/1200/630" alt="성수 저녁"></div>
+            <div class="og-body">
+              <span class="og-wordmark"><i class="ph ph-pencil-line"></i> SAEGIM</span>
+              <div class="og-title">언니와 저녁</div>
+              <div class="og-meta">7월 16일 저녁 · 성수 브릭 베이커리 · 완료 3</div>
+            </div>
+          </div>
+          <div class="alias-note">
+            <i class="ph ph-shield-check"></i>
+            <span>상대 이름은 별칭 <b>'언니'</b>로 표시돼요. 실명은 공유 링크에 포함되지 않습니다.</span>
+          </div>
+          <div class="share-targets">
+            <button class="share-target"><span class="ic"><i class="ph ph-link-simple"></i></span>링크 복사</button>
+            <button class="share-target"><span class="ic"><i class="ph ph-chat-circle"></i></span>메시지</button>
+            <button class="share-target"><span class="ic"><i class="ph ph-image"></i></span>이미지 저장</button>
+            <button class="share-target"><span class="ic"><i class="ph ph-dots-three"></i></span>더보기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 시트: 라이선스 ============ -->
+      <div class="sheet-scrim" id="sheet-license">
+        <div class="sheet">
+          <div class="grabber"></div>
+          <div class="sheet-title">오픈소스 라이선스</div>
+          <p class="sheet-lead">새김은 아래 오픈소스의 도움으로 만들어졌어요.</p>
+          <div class="card">
+            <div class="row"><div class="row-main"><div class="row-title">Kiwi</div><div class="row-sub">한국어 형태소 분석 · 규칙 기반 파싱 엔진</div></div><span class="badge neutral">LGPLv3</span></div>
+            <div class="row"><div class="row-main"><div class="row-title">Pretendard</div><div class="row-sub">본문·제목 서체</div></div><span class="badge neutral">OFL-1.1</span></div>
+            <div class="row"><div class="row-main"><div class="row-title">Phosphor Icons</div><div class="row-sub">인터페이스 아이콘</div></div><span class="badge neutral">MIT</span></div>
+          </div>
+          <p class="license-note"><i class="ph ph-info"></i><span>Kiwi는 LGPLv3에 따라 사용되며, 라이브러리 변경 시 소스 공개 의무를 준수합니다.</span></p>
+        </div>
+      </div>
+
     </div>
-    <div class="type-scale">
-      <div style="font: var(--text-display);">디스플레이 28 · WEEK 29</div>
-      <div style="font: var(--text-title);">타이틀 21 · 민지와 저녁</div>
-      <div style="font: var(--text-body-lg);">본문 L 17 · 컴포즈 입력 텍스트, <span class="tk">내일</span> 토큰 하이라이트 포함</div>
-      <div style="font: var(--text-body);">본문 15 · 리스트 아이템 제목</div>
-      <div style="font: var(--text-sm); color: var(--fg-muted);">보조 13 · 시간, 주소, 메타 정보</div>
-      <div class="section-label" style="padding: 0;">섹션 라벨 11 · TODAY</div>
-    </div>
-    <div class="btn-states">
-      <button class="cta">기본 CTA</button>
-      <button class="cta secondary">보조 CTA</button>
-      <button class="cta" disabled>비활성</button>
-      <button class="icon-btn"><i class="ph ph-microphone"></i></button>
-      <button class="icon-btn accent"><i class="ph ph-arrow-up"></i></button>
-      <span class="badge"><i class="ph-fill ph-cloud-rain"></i> 강수 60%</span>
-      <span class="badge ok"><i class="ph ph-check"></i> 동기화됨</span>
-    </div>
-  </section>
+    <div class="device-label">Saegim · 원페이지 앱</div>
+  </div>
 </main>
 
 <script src="assets/app.js"></script>

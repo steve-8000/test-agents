@@ -31,6 +31,11 @@
   --success: hsl(152 45% 40%);         /* 완료 체크 */
   --success-soft: hsl(152 45% 40% / 0.12);
 
+  /* 엔티티 인라인 하이라이트 색 (액센트와 독립인 고정 의미색) */
+  --entity-person: hsl(212 68% 46%);  --entity-person-soft: hsl(212 68% 46% / 0.12);
+  --entity-place: hsl(150 46% 36%);   --entity-place-soft: hsl(150 46% 36% / 0.12);
+  --entity-recur: hsl(270 52% 55%);   --entity-recur-soft: hsl(270 52% 55% / 0.14);
+
   /* 그림자: 배경 색조로 틴트, 순수 검정 금지 */
   --shadow-sm: 0 1px 2px hsl(222 25% 20% / 0.06);
   --shadow-md: 0 4px 16px hsl(222 25% 20% / 0.10);
@@ -86,10 +91,71 @@
   --success: hsl(152 42% 52%);
   --success-soft: hsl(152 42% 52% / 0.14);
 
+  /* 엔티티 인라인 하이라이트 색 (다크) */
+  --entity-person: hsl(212 78% 70%);  --entity-person-soft: hsl(212 78% 70% / 0.18);
+  --entity-place: hsl(150 52% 60%);   --entity-place-soft: hsl(150 52% 60% / 0.18);
+  --entity-recur: hsl(270 72% 74%);   --entity-recur-soft: hsl(270 72% 74% / 0.20);
+
   --shadow-sm: 0 1px 2px hsl(222 40% 3% / 0.4);
   --shadow-md: 0 4px 16px hsl(222 40% 3% / 0.5);
   --shadow-lg: 0 12px 40px hsl(222 40% 3% / 0.6);
 
   --shell-bg: hsl(222 20% 7%);
   --shell-panel: var(--bg-elevated);
+}
+
+/* ============================================================
+   액센트 테마 세트 (5종) — 전역 라이트/다크는 유지, 액센트만 교체.
+   html[data-accent="..."] 로 스위치. 기본(미지정)=rose.
+   교체 대상: --accent / -strong / -fg / -soft / -ring-2 / -ring-3 뿐.
+   ============================================================ */
+
+/* rose = 기본(:root/[data-theme=dark])와 동일. 픽커 프리뷰용 명시 별칭(값 동일). */
+[data-accent="rose"] {
+  --accent: hsl(340 64% 50%); --accent-strong: hsl(340 70% 42%); --accent-fg: hsl(0 0% 100%);
+  --accent-soft: hsl(340 60% 50% / 0.12); --accent-ring-2: hsl(340 45% 62%); --accent-ring-3: hsl(340 30% 74%);
+}
+[data-theme="dark"][data-accent="rose"] {
+  --accent: hsl(340 70% 64%); --accent-strong: hsl(340 75% 70%); --accent-fg: hsl(222 18% 9%);
+  --accent-soft: hsl(340 70% 64% / 0.16); --accent-ring-2: hsl(340 50% 52%); --accent-ring-3: hsl(340 30% 38%);
+}
+
+/* ---- coral (따뜻한 주홍) ---- */
+[data-accent="coral"] {
+  --accent: hsl(14 82% 55%); --accent-strong: hsl(14 84% 46%); --accent-fg: hsl(0 0% 100%);
+  --accent-soft: hsl(14 78% 55% / 0.12); --accent-ring-2: hsl(14 60% 66%); --accent-ring-3: hsl(14 42% 78%);
+}
+[data-theme="dark"][data-accent="coral"] {
+  --accent: hsl(14 85% 66%); --accent-strong: hsl(14 88% 72%); --accent-fg: hsl(222 18% 9%);
+  --accent-soft: hsl(14 85% 66% / 0.16); --accent-ring-2: hsl(14 60% 54%); --accent-ring-3: hsl(14 40% 40%);
+}
+
+/* ---- amber (골드) — 밝은 액센트라 fg는 어두운 톤 ---- */
+[data-accent="amber"] {
+  --accent: hsl(38 92% 50%); --accent-strong: hsl(33 90% 44%); --accent-fg: hsl(38 45% 14%);
+  --accent-soft: hsl(38 88% 50% / 0.15); --accent-ring-2: hsl(38 70% 62%); --accent-ring-3: hsl(38 55% 76%);
+}
+[data-theme="dark"][data-accent="amber"] {
+  --accent: hsl(40 92% 60%); --accent-strong: hsl(40 95% 68%); --accent-fg: hsl(38 45% 12%);
+  --accent-soft: hsl(40 90% 60% / 0.17); --accent-ring-2: hsl(40 65% 50%); --accent-ring-3: hsl(40 45% 38%);
+}
+
+/* ---- sage (차분한 초록) ---- */
+[data-accent="sage"] {
+  --accent: hsl(150 44% 40%); --accent-strong: hsl(150 48% 32%); --accent-fg: hsl(0 0% 100%);
+  --accent-soft: hsl(150 42% 40% / 0.13); --accent-ring-2: hsl(150 32% 56%); --accent-ring-3: hsl(150 24% 72%);
+}
+[data-theme="dark"][data-accent="sage"] {
+  --accent: hsl(150 48% 56%); --accent-strong: hsl(150 52% 64%); --accent-fg: hsl(222 18% 9%);
+  --accent-soft: hsl(150 48% 56% / 0.16); --accent-ring-2: hsl(150 34% 46%); --accent-ring-3: hsl(150 26% 34%);
+}
+
+/* ---- ocean (차분한 파랑) ---- */
+[data-accent="ocean"] {
+  --accent: hsl(212 74% 50%); --accent-strong: hsl(212 78% 42%); --accent-fg: hsl(0 0% 100%);
+  --accent-soft: hsl(212 72% 50% / 0.12); --accent-ring-2: hsl(212 55% 64%); --accent-ring-3: hsl(212 40% 76%);
+}
+[data-theme="dark"][data-accent="ocean"] {
+  --accent: hsl(212 78% 64%); --accent-strong: hsl(212 82% 70%); --accent-fg: hsl(222 18% 9%);
+  --accent-soft: hsl(212 78% 64% / 0.16); --accent-ring-2: hsl(212 55% 52%); --accent-ring-3: hsl(212 40% 40%);
 }
