@@ -43,13 +43,17 @@
 
   /* ---- 타이포 ---- */
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
-  --text-display: 600 28px/34px var(--font-sans);   /* 큰 제목 (WEEK 29) */
-  --text-title: 600 21px/26px var(--font-sans);     /* 시트 제목 */
-  --text-body-lg: 400 17px/24px var(--font-sans);   /* 컴포즈 입력 */
-  --text-body: 400 15px/21px var(--font-sans);      /* 리스트 본문 */
-  --text-sm: 400 13px/18px var(--font-sans);        /* 보조 */
-  --text-xs: 500 11px/14px var(--font-sans);        /* 섹션 라벨 (uppercase) */
+  --text-display: 600 24px/29px var(--font-sans);   /* 큰 제목 (WEEK 29) */
+  --text-title: 600 18px/23px var(--font-sans);     /* 시트 제목 */
+  --text-body-lg: 400 15px/21px var(--font-sans);   /* 컴포즈 입력 */
+  --text-body: 400 14px/19px var(--font-sans);      /* 리스트 본문 */
+  --text-sm: 400 12px/16px var(--font-sans);        /* 보조 */
+  --text-xs: 500 10.5px/14px var(--font-sans);        /* 섹션 라벨 (uppercase) */
   --tracking-label: 0.08em;
+
+  /* ---- 아이콘 글리프 크기 (font-size 토큰; 컴포넌트 raw px 금지) ---- */
+  --icon-sm: 14px; --icon-md: 16px; --icon-lg: 20px;
+  --icon-xl: 28px; --icon-2xl: 44px; --icon-3xl: 56px;
 
   /* ---- 간격 (4px 배수만) ---- */
   --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;  --sp-4: 16px;
@@ -105,7 +109,7 @@
 }
 
 /* ============================================================
-   액센트 테마 세트 (5종) — 전역 라이트/다크는 유지, 액센트만 교체.
+   액센트 테마 세트 (5종). 전역 라이트/다크는 유지, 액센트만 교체.
    html[data-accent="..."] 로 스위치. 기본(미지정)=rose.
    교체 대상: --accent / -strong / -fg / -soft / -ring-2 / -ring-3 뿐.
    ============================================================ */
@@ -130,7 +134,7 @@
   --accent-soft: hsl(14 85% 66% / 0.16); --accent-ring-2: hsl(14 60% 54%); --accent-ring-3: hsl(14 40% 40%);
 }
 
-/* ---- amber (골드) — 밝은 액센트라 fg는 어두운 톤 ---- */
+/* ---- amber (골드): 밝은 액센트라 fg는 어두운 톤 ---- */
 [data-accent="amber"] {
   --accent: hsl(38 92% 50%); --accent-strong: hsl(33 90% 44%); --accent-fg: hsl(38 45% 14%);
   --accent-soft: hsl(38 88% 50% / 0.15); --accent-ring-2: hsl(38 70% 62%); --accent-ring-3: hsl(38 55% 76%);

@@ -44,7 +44,7 @@ body {
   cursor: pointer;
 }
 .theme-toggle:hover { border-color: var(--border-strong); }
-.theme-toggle .ph { font-size: 16px; }
+.theme-toggle .ph { font-size: var(--icon-md); }
 
 .shell-main {
   display: grid;
@@ -160,7 +160,7 @@ body {
   font: var(--text-sm); font-weight: 600; color: var(--fg);
 }
 .statusbar .side { display: flex; gap: var(--sp-1); align-items: center; }
-.statusbar .ph { font-size: 14px; }
+.statusbar .ph { font-size: var(--icon-sm); }
 
 .screen { flex: 1; overflow-y: auto; overscroll-behavior: contain; position: relative; scrollbar-width: none; }
 .screen::-webkit-scrollbar { display: none; }
@@ -188,7 +188,7 @@ body {
   display: grid; place-items: center;
   border-radius: var(--radius-pill);
   background: var(--bg-inset); color: var(--fg);
-  border: none; cursor: pointer; font-size: 17px;
+  border: none; cursor: pointer; font-size: var(--icon-md);
 }
 .icon-btn.accent { background: var(--accent); color: var(--accent-fg); }
 
@@ -197,7 +197,7 @@ body {
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--fg-muted);
-  padding: var(--sp-4) var(--sp-4) var(--sp-2);
+  padding: var(--sp-3) var(--sp-4) var(--sp-1);
 }
 
 .card {
@@ -209,15 +209,15 @@ body {
 
 .row {
   display: flex; align-items: center; gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
-  min-height: 52px;
+  padding: var(--sp-2) var(--sp-4);
+  min-height: 44px;
 }
 .row + .row { border-top: 1px solid var(--border); }
 .row .row-main { flex: 1; min-width: 0; }
 .row .row-title { font: var(--text-body); font-weight: 500; color: var(--fg); }
 .row .row-sub { font: var(--text-sm); color: var(--fg-muted); margin-top: 1px; word-break: keep-all; }
 .row .row-meta { flex: none; display: flex; align-items: center; gap: var(--sp-2); font: var(--text-sm); color: var(--fg-muted); }
-.row .ctx { color: var(--fg-muted); font-size: 16px; }
+.row .ctx { color: var(--fg-muted); font-size: var(--icon-md); }
 .row.done .row-title { text-decoration: line-through; color: var(--fg-faint); }
 
 .checkbox {
@@ -225,24 +225,24 @@ body {
   border-radius: var(--radius-pill);
   border: 1.5px solid var(--border-strong);
   display: grid; place-items: center;
-  color: transparent; font-size: 14px;
+  color: transparent; font-size: var(--icon-sm);
   background: transparent;
 }
 .checkbox.checked { background: var(--success); border-color: var(--success); color: var(--bg-elevated); }
 .checkbox.event { border-radius: var(--radius-chip); } /* 이벤트는 사각, 투두는 원형 구분 */
 
 .weather-chip { display: inline-flex; align-items: center; gap: var(--sp-1); color: var(--fg-muted); font: var(--text-sm); }
-.weather-chip .ph-fill { font-size: 15px; }
+.weather-chip .ph-fill { font-size: var(--icon-md); }
 
 /* 요일 스트립 */
 .week-strip {
   display: grid; grid-template-columns: repeat(7, 1fr);
   gap: var(--sp-1);
-  padding: var(--sp-2) var(--sp-4) var(--sp-3);
+  padding: var(--sp-1) var(--sp-4) var(--sp-2);
 }
 .day {
   display: flex; flex-direction: column; align-items: center; gap: var(--sp-1);
-  padding: var(--sp-2) 0;
+  padding: var(--sp-1) 0;
   border-radius: var(--radius-input);
   font: var(--text-sm); color: var(--fg-muted);
 }
@@ -253,7 +253,7 @@ body {
 .day.today .num, .day.today .dot { color: var(--accent-fg); background: var(--accent-fg); }
 
 /* 습관 링 */
-.rings { display: flex; gap: var(--sp-4); padding: var(--sp-2) var(--sp-4) var(--sp-4); }
+.rings { display: flex; gap: var(--sp-3); padding: var(--sp-1) var(--sp-4) var(--sp-3); }
 .ring { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); font: var(--text-xs); color: var(--fg-muted); text-transform: none; letter-spacing: 0; }
 .ring svg { width: 52px; height: 52px; transform: rotate(-90deg); }
 .ring circle { fill: none; stroke-width: 5; stroke-linecap: round; }
@@ -274,7 +274,7 @@ body {
   box-shadow: var(--shadow-md);
   color: var(--fg-faint); font: var(--text-body);
 }
-.compose-pill .ph { color: var(--fg-muted); font-size: 18px; }
+.compose-pill .ph { color: var(--fg-muted); font-size: var(--icon-md); }
 .compose-pill .hint { flex: 1; }
 
 /* 세그먼트 컨트롤 */
@@ -362,7 +362,7 @@ body {
   width: 44px; height: 44px; flex: none;
   border: none; border-radius: var(--radius-pill);
   background: var(--accent); color: var(--accent-fg);
-  display: grid; place-items: center; font-size: 20px;
+  display: grid; place-items: center; font-size: var(--icon-lg);
   cursor: pointer;
 }
 
@@ -428,7 +428,7 @@ body {
 .map-snippet .pin {
   position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -100%);
-  color: var(--accent); font-size: 30px;
+  color: var(--accent); font-size: var(--icon-xl);
   filter: drop-shadow(var(--shadow-sm));
 }
 [data-theme="dark"] .map-snippet img,
@@ -467,7 +467,7 @@ body {
 .photo-grid .add-photo {
   display: grid; place-items: center;
   border: 1.5px dashed var(--border-strong);
-  color: var(--fg-muted); font-size: 22px;
+  color: var(--fg-muted); font-size: var(--icon-lg);
   background: transparent; cursor: pointer;
 }
 
@@ -511,7 +511,7 @@ body {
   cursor: pointer;
 }
 .chip:hover { border-color: var(--accent); }
-.chip .ph { color: var(--fg-muted); font-size: 15px; }
+.chip .ph { color: var(--fg-muted); font-size: var(--icon-md); }
 
 /* 세로 타임라인(연대기·홈 스케줄 축) */
 .timeline { position: relative; padding: var(--sp-2) var(--sp-4); }
@@ -619,5 +619,5 @@ body {
 .share-target .ic {
   width: 48px; height: 48px; display: grid; place-items: center;
   border-radius: var(--radius-pill);
-  background: var(--bg-inset); color: var(--fg); font-size: 22px;
+  background: var(--bg-inset); color: var(--fg); font-size: var(--icon-lg);
 }
