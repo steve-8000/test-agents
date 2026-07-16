@@ -248,6 +248,13 @@ function initApp() {
     closeSheet();
   });
 
+  // 온보딩 완료 플래그로 실앱 기동 재현: 완료 시 저장하고, 재방문은 홈으로 시작.
+  const ONBOARDED_KEY = "saegim-onboarded";
+  document.querySelectorAll("[data-ob-complete]").forEach((el) =>
+    el.addEventListener("click", () => localStorage.setItem(ONBOARDED_KEY, "1"))
+  );
+  if (localStorage.getItem(ONBOARDED_KEY) === "1") showView("home");
+
   syncThemeControls(document.documentElement.dataset.theme);
 }
 

@@ -11,32 +11,9 @@
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
 <style>
-  /* ---- 셸 레이아웃 (문서 자체) ---- */
-  .app-shell {
-    display: grid;
-    grid-template-columns: 340px minmax(0, 1fr);
-    gap: var(--sp-8);
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: var(--sp-8) var(--sp-6) var(--sp-12);
-    align-items: start;
-  }
-  @media (max-width: 900px) { .app-shell { grid-template-columns: 1fr; } }
-  .app-stage { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); }
-
-  .shell-header .accent-picker { margin-left: var(--sp-2); }
-
-  .notes .lead { color: var(--fg-muted); font: var(--text-sm); }
-  .jump { display: flex; flex-direction: column; gap: var(--sp-1); }
-  .jump button {
-    display: flex; align-items: center; gap: var(--sp-3);
-    padding: var(--sp-2) var(--sp-3);
-    border: 1px solid var(--border); border-radius: var(--radius-input);
-    background: var(--bg-inset); color: var(--fg);
-    font: var(--text-sm); font-weight: 600; cursor: pointer; text-align: left;
-  }
-  .jump button:hover { border-color: var(--accent); }
-  .jump button .ph { color: var(--accent); font-size: var(--icon-md); }
+  /* iOS 에뮬레이터: 폰 프레임 단독 중앙 배치 */
+  .app-shell { min-height: 100vh; display: grid; place-items: center; padding: var(--sp-6); box-sizing: border-box; }
+  .app-stage { display: flex; }
 
   /* ---- 온보딩 ---- */
   .ob { padding: var(--sp-6) var(--sp-6) var(--sp-8); gap: var(--sp-6); }
@@ -179,39 +156,11 @@
 </head>
 <body>
 
-<header class="shell-header">
-  <div class="brand"><i class="ph ph-pencil-line"></i> Saegim 프로토타입</div>
-  <div class="crumb">원페이지 앱</div>
-  <div class="spacer"></div>
-  <button class="theme-toggle"><i class="ph ph-sun"></i> <span>라이트</span></button>
-  <div class="accent-picker" role="group" aria-label="액센트 색">
-    <button class="swatch-btn" data-pick="rose" data-accent="rose" title="로즈" aria-label="로즈"></button>
-    <button class="swatch-btn" data-pick="coral" data-accent="coral" title="코랄" aria-label="코랄"></button>
-    <button class="swatch-btn" data-pick="amber" data-accent="amber" title="앰버" aria-label="앰버"></button>
-    <button class="swatch-btn" data-pick="sage" data-accent="sage" title="세이지" aria-label="세이지"></button>
-    <button class="swatch-btn" data-pick="ocean" data-accent="ocean" title="오션" aria-label="오션"></button>
-  </div>
-</header>
 
 <main class="app-shell">
-  <aside class="notes">
-    <h2>원페이지 앱 리뷰</h2>
-    <p class="lead">8개 스텝 페이지를 하나의 폰 프레임 안에서 리로드 없이 동작하는 클릭형 앱으로 합쳤습니다. 아래 버튼은 리뷰 편의용 바로가기이고, 실제 이동은 폰 안에서 이어집니다.</p>
-    <div class="jump">
-      <button data-show-view="onboarding"><i class="ph ph-hand-waving"></i> 온보딩</button>
-      <button data-show-view="home"><i class="ph ph-house"></i> 홈</button>
-      <button data-show-view="story"><i class="ph ph-book-open"></i> 스토리</button>
-      <button data-show-view="settings"><i class="ph ph-gear-six"></i> 설정</button>
-    </div>
-    <div class="review-points">
-      <div class="pt"><i class="ph ph-arrows-left-right"></i><span>홈에서 스케줄 카드를 탭하면 상세 시트, 투두를 체크하면 완료 시트, 하단 pill은 컴포즈 시트로 이어집니다.</span></div>
-      <div class="pt"><i class="ph ph-palette"></i><span>상단·설정 화면의 액센트 픽커는 rose·coral·amber·sage·ocean 5종을 즉시 전환하고 새로고침 후에도 유지됩니다.</span></div>
-      <div class="pt"><i class="ph ph-highlighter"></i><span>컴포즈 입력에서 날짜·시간은 액센트, 사람은 파랑, 장소는 초록, 반복은 보라로 구분됩니다.</span></div>
-    </div>
-  </aside>
 
   <div class="app-stage">
-    <div class="device app">
+    <div class="device app" data-testid="phone">
       <div class="statusbar"><span>9:41</span><span class="side"><i class="ph ph-cell-signal-full"></i><i class="ph ph-wifi-high"></i><i class="ph ph-battery-full"></i></span></div>
       <div class="screen">
 
@@ -287,7 +236,7 @@
               </div>
             </div>
             <div class="ob-actions">
-              <button class="cta" data-show-view="home">시작하기 <i class="ph ph-arrow-right"></i></button>
+              <button class="cta" data-show-view="home" data-ob-complete>시작하기 <i class="ph ph-arrow-right"></i></button>
             </div>
           </div>
         </section>
@@ -300,8 +249,8 @@
               <div class="title">오늘</div>
             </div>
             <div class="spacer"></div>
-            <button class="icon-btn" data-show-view="story" aria-label="스토리"><i class="ph ph-book-open"></i></button>
-            <button class="icon-btn" data-show-view="settings" aria-label="설정"><i class="ph ph-gear-six"></i></button>
+            <button class="icon-btn" data-show-view="story" data-testid="nav-story" aria-label="스토리"><i class="ph ph-book-open"></i></button>
+            <button class="icon-btn" data-show-view="settings" data-testid="nav-settings" aria-label="설정"><i class="ph ph-gear-six"></i></button>
           </div>
 
           <div class="week-strip">
@@ -340,7 +289,7 @@
             </div>
             <div class="tl-item">
               <div class="tl-time">20:00</div>
-              <div class="tl-card" data-open-sheet="event">
+              <div class="tl-card" data-open-sheet="event" data-testid="schedule-card">
                 <div class="tl-title">민지와 저녁</div>
                 <div class="tl-sub">성수 브릭 베이커리</div>
                 <div class="tl-foot">
@@ -355,7 +304,7 @@
           <div class="section-label">오늘</div>
           <div class="card">
             <div class="row">
-              <span class="checkbox todo-check" data-open-sheet="complete"><i class="ph ph-check"></i></span>
+              <span class="checkbox todo-check" data-open-sheet="complete" data-testid="todo-check"><i class="ph ph-check"></i></span>
               <div class="row-main"><div class="row-title">우산 챙기기</div><div class="row-sub">비 소식, 우산 챙기세요</div></div>
               <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
             </div>
@@ -370,7 +319,7 @@
             </div>
           </div>
 
-          <div class="compose-pill" data-open-sheet="compose">
+          <div class="compose-pill" data-open-sheet="compose" data-testid="compose-pill">
             <i class="ph ph-plus-circle"></i>
             <span class="hint">무엇이든 적으면 일정이 돼요</span>
             <i class="ph ph-microphone"></i>
@@ -682,7 +631,6 @@
       </div>
 
     </div>
-    <div class="device-label">Saegim · 원페이지 앱</div>
   </div>
 </main>
 
