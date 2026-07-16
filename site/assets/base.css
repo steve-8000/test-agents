@@ -56,6 +56,14 @@ body {
   align-items: start;
 }
 @media (max-width: 980px) { .shell-main { grid-template-columns: 1fr; } }
+@media (max-width: 560px) {
+  .shell-header { flex-wrap: wrap; row-gap: var(--sp-2); padding: var(--sp-3) var(--sp-4); }
+  .shell-header .brand { white-space: nowrap; font: var(--text-body); font-weight: 700; }
+  .shell-header .crumb { display: none; }
+  .shell-header .spacer { display: none; }
+  .theme-toggle { white-space: nowrap; }
+  .accent-picker { flex-basis: 100%; justify-content: flex-start; margin-top: var(--sp-1); }
+}
 
 .stage {
   display: flex; flex-wrap: wrap; gap: var(--sp-8);
