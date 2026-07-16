@@ -26,3 +26,5 @@ configMapGenerator:
       - site/assets/tokens.css
       - site/assets/base.css
       - site/assets/app.js
+      - site/assets/parser.js
+      - site/assets/live.js

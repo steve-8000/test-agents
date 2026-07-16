@@ -236,7 +236,25 @@
               </div>
             </div>
             <div class="ob-actions">
-              <button class="cta" data-show-view="home" data-ob-complete>시작하기 <i class="ph ph-arrow-right"></i></button>
+              <button class="cta" data-ob-complete>시작하기 <i class="ph ph-arrow-right"></i></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 뷰: 인증 ============ -->
+        <section class="view" id="view-auth">
+          <div class="ob" style="display:flex; flex-direction:column; gap:var(--sp-4); min-height:100%;">
+            <div class="ob-hero">
+              <div class="ob-logo"><i class="ph ph-pencil-line"></i></div>
+              <div class="ob-brand">Saegim</div>
+              <div class="ob-tagline" id="auth-title">로그인</div>
+            </div>
+            <div class="ob-actions" style="gap:var(--sp-3);">
+              <input id="auth-email" type="email" autocomplete="email" placeholder="이메일" style="width:100%;padding:var(--sp-3) var(--sp-4);border:1px solid var(--border);border-radius:var(--radius-input);background:var(--bg-inset);color:var(--fg);font:var(--text-body);box-sizing:border-box;">
+              <input id="auth-pw" type="password" autocomplete="current-password" placeholder="비밀번호" style="width:100%;padding:var(--sp-3) var(--sp-4);border:1px solid var(--border);border-radius:var(--radius-input);background:var(--bg-inset);color:var(--fg);font:var(--text-body);box-sizing:border-box;">
+              <div id="auth-err" style="color:var(--accent);font:var(--text-sm);min-height:18px;"></div>
+              <button class="cta" id="auth-submit">로그인</button>
+              <button id="auth-switch" type="button" style="background:none;border:none;color:var(--fg-muted);font:var(--text-sm);cursor:pointer;padding:var(--sp-2);">계정이 없나요? 가입</button>
             </div>
           </div>
         </section>
@@ -245,7 +263,7 @@
         <section class="view" id="view-home">
           <div class="navbar home-nav">
             <div>
-              <div class="datelabel">7월 16일 목요일</div>
+              <div class="datelabel" id="home-date">오늘</div>
               <div class="title">오늘</div>
             </div>
             <div class="spacer"></div>
@@ -253,70 +271,25 @@
             <button class="icon-btn" data-show-view="settings" data-testid="nav-settings" aria-label="설정"><i class="ph ph-gear-six"></i></button>
           </div>
 
-          <div class="week-strip">
-            <div class="day"><span>월</span><span class="num">13</span><span class="dot"></span></div>
-            <div class="day"><span>화</span><span class="num">14</span><span class="dot"></span></div>
-            <div class="day"><span>수</span><span class="num">15</span><span class="dot"></span></div>
-            <div class="day today"><span>목</span><span class="num">16</span><span class="dot"></span></div>
-            <div class="day has-events"><span>금</span><span class="num">17</span><span class="dot"></span></div>
-            <div class="day"><span>토</span><span class="num">18</span><span class="dot"></span></div>
-            <div class="day"><span>일</span><span class="num">19</span><span class="dot"></span></div>
+          <div class="week-strip" id="week-strip"></div>
+
+          <div id="home-empty" style="display:none; padding: var(--sp-8) var(--sp-6); color: var(--fg-muted); font: var(--text-body); text-align:center;">
+            아직 기록이 없어요.<br>아래 입력창에 한 줄 적으면 일정이 됩니다.
           </div>
 
-          <!-- 습관 -->
-          <div class="section-label">습관</div>
-          <div class="routine-row">
-            <div class="routine-chip done">
-              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p1" r="23" cx="26" cy="26" stroke-dasharray="144.5 144.5"></circle></svg></span>
-              <div><div class="r-name">달리기</div><div class="r-streak">12일째</div></div>
-            </div>
-            <div class="routine-chip">
-              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p2" r="23" cx="26" cy="26" stroke-dasharray="58 144.5"></circle></svg></span>
-              <div><div class="r-name">영어 단어</div><div class="r-streak">5일째</div></div>
-            </div>
-            <div class="routine-chip">
-              <span class="ring"><svg viewBox="0 0 52 52"><circle class="track" r="23" cx="26" cy="26"></circle><circle class="p3" r="23" cx="26" cy="26" stroke-dasharray="8 144.5"></circle></svg></span>
-              <div><div class="r-name">필라테스</div><div class="r-streak">화·목 19:00 예정</div></div>
-            </div>
+          <div id="sec-routines" style="display:none">
+            <div class="section-label">습관</div>
+            <div class="routine-row" id="home-routines"></div>
           </div>
 
-          <!-- 이번 주 -->
-          <div class="section-label">이번 주</div>
-          <div class="timeline">
-            <div class="tl-item muted">
-              <div class="tl-time">10:00</div>
-              <div class="tl-card"><div class="tl-title">팀 위클리</div><div class="tl-sub">온라인 · 주간 회고 · 지남</div></div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-time">20:00</div>
-              <div class="tl-card" data-open-sheet="event" data-testid="schedule-card">
-                <div class="tl-title">민지와 저녁</div>
-                <div class="tl-sub">성수 브릭 베이커리</div>
-                <div class="tl-foot">
-                  <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 26° · 강수 60%</span>
-                  <span class="detail-hint">상세 <i class="ph ph-caret-right"></i></span>
-                </div>
-              </div>
-            </div>
+          <div id="sec-schedules" style="display:none">
+            <div class="section-label">이번 주</div>
+            <div class="timeline" id="home-schedules"></div>
           </div>
 
-          <!-- 오늘 -->
-          <div class="section-label">오늘</div>
-          <div class="card">
-            <div class="row">
-              <span class="checkbox todo-check" data-open-sheet="complete" data-testid="todo-check"><i class="ph ph-check"></i></span>
-              <div class="row-main"><div class="row-title">우산 챙기기</div><div class="row-sub">비 소식, 우산 챙기세요</div></div>
-              <div class="row-meta"><span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 60%</span></div>
-            </div>
-            <div class="row" id="todoGrocery">
-              <span class="checkbox todo-check" data-open-sheet="complete"><i class="ph ph-check"></i></span>
-              <div class="row-main"><div class="row-title">장보기</div><div class="row-sub">저녁 재료 · 두부, 대파, 달걀</div></div>
-            </div>
-            <div class="row">
-              <span class="checkbox todo-check" data-open-sheet="complete"><i class="ph ph-check"></i></span>
-              <div class="row-main"><div class="row-title">김민지님께 전화</div><div class="row-sub">지난주 부재중 답신</div></div>
-              <div class="row-meta"><i class="ph ph-phone ctx"></i></div>
-            </div>
+          <div id="sec-todos" style="display:none">
+            <div class="section-label">오늘</div>
+            <div class="card" id="home-todos"></div>
           </div>
 
           <div class="compose-pill" data-open-sheet="compose" data-testid="compose-pill">
@@ -338,58 +311,13 @@
 
           <article class="story">
             <div class="story-head">
-              <div><div class="story-date">7월 16일 <span class="story-dow">목요일</span></div></div>
+              <div><div class="story-date" id="story-date">오늘</div></div>
               <button class="icon-btn" data-open-sheet="share" aria-label="하루 카드 공유"><i class="ph ph-share-network"></i></button>
             </div>
-            <div class="story-auto"><i class="ph ph-stack"></i> 완료·사진·날씨로 자동 조립됨</div>
-            <div class="story-summary">
-              <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 비 26°</span>
-              <span class="badge neutral">완료 3 · 사진 1</span>
-            </div>
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-time">07:30</div>
-                <div class="tl-card">
-                  <div class="tl-head"><div class="tl-title">우산 챙기기</div><div class="tl-badges"><span class="badge neutral">일상</span><i class="ph ph-check-circle moment-check"></i></div></div>
-                  <div class="tl-sub">비 예보로 아침에 자동 추천</div>
-                </div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-time">08:00</div>
-                <div class="tl-card">
-                  <div class="tl-head"><div class="tl-title">필라테스</div><div class="tl-badges"><span class="badge neutral">운동</span><i class="ph ph-check-circle moment-check"></i></div></div>
-                  <div class="tl-sub">이번 주 3회째</div>
-                </div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-time">20:00</div>
-                <div class="tl-card">
-                  <div class="tl-head"><div class="tl-title">민지와 저녁</div><div class="tl-badges"><span class="badge neutral">약속</span></div></div>
-                  <img class="tl-thumb" src="https://picsum.photos/seed/cafe-evening/480/270" alt="성수 저녁 사진">
-                  <div class="tl-quote">오랜만에 언니랑. 빵이 맛있었다</div>
-                </div>
-              </div>
-            </div>
-            <div class="day-line">
-              <div class="lbl"><i class="ph ph-quotes"></i> 내가 얹은 한 줄</div>
-              <p>비 오는 날은 역시 빵.</p>
-            </div>
-            <button class="day-line-entry"><i class="ph ph-plus-circle"></i> 오늘에 한 줄 더 남기기</button>
-          </article>
-
-          <article class="story muted">
-            <div class="story-head"><div><div class="story-date">7월 15일 <span class="story-dow">수요일</span></div></div></div>
-            <div class="story-summary"><span class="badge neutral">완료 2 · 루틴 1</span></div>
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-time">07:00</div>
-                <div class="tl-card"><div class="tl-head"><div class="tl-title">달리기 5km</div><div class="tl-badges"><span class="badge neutral">운동</span><i class="ph ph-check-circle moment-check"></i></div></div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-time">22:30</div>
-                <div class="tl-card"><div class="tl-head"><div class="tl-title">책 30쪽 읽기</div><div class="tl-badges"><span class="badge neutral">기록</span><i class="ph ph-check-circle moment-check"></i></div></div></div>
-              </div>
-            </div>
+            <div class="story-auto"><i class="ph ph-stack"></i> 완료 항목으로 자동 조립됨</div>
+            <div class="story-summary" id="story-summary"></div>
+            <div id="story-empty" style="display:none; padding: var(--sp-6) 0; color: var(--fg-muted); font: var(--text-sm);">아직 오늘 완료한 항목이 없어요.</div>
+            <div class="timeline" id="story-timeline"></div>
           </article>
         </section>
 
@@ -400,12 +328,15 @@
             <div class="title">설정</div>
           </div>
 
-          <!-- 프로필 -->
+          <!-- 계정 -->
           <div class="card">
             <div class="row">
-              <span class="pf-avatar">지</span>
-              <div class="row-main"><div class="row-title">지우</div><div class="row-sub">Apple 계정 연결됨</div></div>
-              <i class="ph ph-caret-right ctx"></i>
+              <span class="pf-avatar"><i class="ph ph-user"></i></span>
+              <div class="row-main"><div class="row-title">로그인 계정</div><div class="row-sub" id="settings-email">-</div></div>
+            </div>
+            <div class="row" id="logout-btn" style="cursor:pointer;">
+              <div class="row-main"><div class="row-title" style="color:var(--accent);">로그아웃</div></div>
+              <i class="ph ph-sign-out ctx"></i>
             </div>
           </div>
 
@@ -497,44 +428,13 @@
             <button class="icon-btn" data-close-sheet aria-label="닫기"><i class="ph ph-x"></i></button>
             <div class="segment three"><button>투두</button><button class="on">스케줄</button><button>루틴</button></div>
           </div>
-          <div class="cmp-input"><span class="tk">내일</span> <span class="tk">오후 8시</span>에 <span class="tk person">민지</span>랑 <span class="tk place">성수</span> 카페에서 저녁<span class="caret"></span></div>
-
-          <div class="cmp-label">약속으로 분류됨</div>
-          <div class="candidate">
-            <div class="avatar square"><i class="ph ph-users-three"></i></div>
-            <div class="c-main"><div class="c-name">약속 <span class="badge">사람+장소</span></div><div class="c-sub">사람과 장소를 함께 인식했어요 · 탭해서 변경</div></div>
-            <i class="ph ph-caret-right"></i>
+          <div class="cmp-input" style="min-height:52px;">
+            <div id="cmp-highlight"></div>
+            <input id="cmp-input" type="text" placeholder="무엇이든 적으면 일정이 돼요" autocomplete="off" style="width:100%;margin-top:var(--sp-3);padding:var(--sp-3) var(--sp-4);border:1px solid var(--border);border-radius:var(--radius-input);background:var(--bg-inset);color:var(--fg);font:var(--text-body-lg);box-sizing:border-box;">
           </div>
+          <div class="cmp-label" id="cmp-kind">무엇이든 적어보세요</div>
 
-          <div class="cmp-label">후보</div>
-          <div class="cmp-cands">
-            <div class="candidate">
-              <div class="avatar">민</div>
-              <div class="c-main"><div class="c-name">김민지</div><div class="c-sub">자주 연락 · 별칭 '언니'</div></div>
-              <i class="ph ph-check"></i>
-            </div>
-            <div class="candidate">
-              <div class="avatar square"><i class="ph ph-map-pin"></i></div>
-              <div class="c-main"><div class="c-name">성수 브릭 베이커리</div><div class="c-sub">서울 성동구 연무장길 24-8</div></div>
-              <i class="ph ph-check"></i>
-            </div>
-          </div>
-
-          <div class="cmp-label">내일 · 기존 일정</div>
-          <div class="card">
-            <div class="row">
-              <span class="checkbox event"></span>
-              <div class="row-main"><div class="row-title">팀 위클리</div><div class="row-sub">온라인 · 주간 회고</div></div>
-              <div class="row-meta">10:00</div>
-            </div>
-            <div class="row">
-              <span class="checkbox event"></span>
-              <div class="row-main"><div class="row-title">피아노 레슨</div><div class="row-sub">성수동</div></div>
-              <div class="row-meta">13:00</div>
-            </div>
-          </div>
-
-          <button class="cta" data-show-view="home" style="margin-top: var(--sp-5);"><i class="ph ph-plus"></i> 추가하기</button>
+          <button class="cta" id="cmp-submit" style="margin-top: var(--sp-5);"><i class="ph ph-plus"></i> 추가하기</button>
         </div>
       </div>
 
@@ -544,25 +444,14 @@
           <div class="grabber"></div>
           <div class="sheet-head">
             <div class="sh-main">
-              <div class="sh-title">민지와 저녁</div>
-              <div class="sh-sub">내일, 20:00 - 20:30</div>
+              <div class="sh-title" id="event-title">일정</div>
+              <div class="sh-sub" id="event-sub"></div>
             </div>
             <button class="icon-btn" data-close-sheet aria-label="닫기"><i class="ph ph-x"></i></button>
           </div>
           <div class="weather-line">
-            <span class="weather-chip"><i class="ph-fill ph-cloud-rain"></i> 26&deg;C · 강수 60%</span>
-            <span class="badge"><i class="ph ph-umbrella"></i> 우산 챙기세요</span>
+            <span class="weather-chip" id="event-weather">날씨</span>
           </div>
-          <div class="sheet-section-label">하위 투두</div>
-          <div class="card">
-            <div class="row"><span class="checkbox"></span><div class="row-main"><div class="row-title">예약 전화하기</div></div></div>
-            <div class="row"><span class="checkbox"></span><div class="row-main"><div class="row-title">케이크 예약 확인하기</div></div></div>
-            <div class="add-todo"><i class="ph ph-plus"></i><span>하위 투두 추가</span></div>
-          </div>
-          <div class="map-snippet" style="background-image: url('https://tile.openstreetmap.org/15/27942/12691.png');">
-            <i class="ph-fill ph-map-pin pin"></i>
-          </div>
-          <div class="map-caption"><i class="ph ph-map-pin"></i><span>성수 브릭 베이커리 · 연무장길 24-8</span></div>
         </div>
       </div>
 
@@ -572,17 +461,12 @@
           <div class="grabber"></div>
           <div class="complete-head">
             <div class="ch-title">오늘을 새기기</div>
-            <div class="ch-sub">장보기 · 방금 완료</div>
+            <div class="ch-sub" id="complete-sub">완료</div>
           </div>
           <div class="check-stage"><i class="ph-fill ph-check-circle mark"></i></div>
-          <div class="complete-label">사진</div>
-          <div class="photo-grid">
-            <img src="https://picsum.photos/seed/grocery-haul/300/300" alt="장본 재료 사진">
-            <button class="add-photo"><i class="ph ph-plus"></i></button>
-          </div>
           <div class="complete-label">한 줄 메모</div>
-          <textarea class="memo-field" placeholder="오늘은 어땠나요?" rows="2">두부는 국산으로. 다음엔 달걀도 넉넉히</textarea>
-          <button class="cta" id="completeSave"><i class="ph ph-seal-check"></i> 완료 저장</button>
+          <textarea class="memo-field" id="complete-memo" placeholder="오늘은 어땠나요?" rows="2"></textarea>
+          <button class="cta" id="complete-save"><i class="ph ph-seal-check"></i> 완료 저장</button>
         </div>
       </div>
 
@@ -595,22 +479,19 @@
             <div class="sh-sub">7월 16일 · 완료 3</div>
           </div>
           <div class="og-card">
-            <div class="og-photo"><img src="https://picsum.photos/seed/cafe-evening/1200/630" alt="성수 저녁"></div>
             <div class="og-body">
               <span class="og-wordmark"><i class="ph ph-pencil-line"></i> SAEGIM</span>
-              <div class="og-title">언니와 저녁</div>
-              <div class="og-meta">7월 16일 저녁 · 성수 브릭 베이커리 · 완료 3</div>
+              <div class="og-title" id="share-title">오늘의 기록</div>
+              <div class="og-meta" id="share-meta"></div>
             </div>
           </div>
           <div class="alias-note">
             <i class="ph ph-shield-check"></i>
-            <span>상대 이름은 별칭 <b>'언니'</b>로 표시돼요. 실명은 공유 링크에 포함되지 않습니다.</span>
+            <span>공유 카드에는 실명 대신 별칭만 표시됩니다. 실명은 공유 링크에 포함되지 않습니다.</span>
           </div>
+          <div id="share-status" style="font:var(--text-sm);color:var(--fg-muted);min-height:16px;margin:var(--sp-2) 0;"></div>
           <div class="share-targets">
-            <button class="share-target"><span class="ic"><i class="ph ph-link-simple"></i></span>링크 복사</button>
-            <button class="share-target"><span class="ic"><i class="ph ph-chat-circle"></i></span>메시지</button>
-            <button class="share-target"><span class="ic"><i class="ph ph-image"></i></span>이미지 저장</button>
-            <button class="share-target"><span class="ic"><i class="ph ph-dots-three"></i></span>더보기</button>
+            <button class="share-target" id="share-create"><span class="ic"><i class="ph ph-link-simple"></i></span>공유 카드 만들기</button>
           </div>
         </div>
       </div>
@@ -634,6 +515,9 @@
   </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/pocketbase@0.22.0/dist/pocketbase.umd.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/parser.js"></script>
+<script src="assets/live.js"></script>
 </body>
 </html>
